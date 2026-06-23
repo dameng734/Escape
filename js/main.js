@@ -320,8 +320,10 @@ export default class Main {
     if (this.isPC) {
       try {
         const si = wx.getSystemInfoSync();
-        this.pcScale = Math.min(si.windowWidth, 800) / 375;
-        wx.showToast({ title: 'scale:' + this.pcScale.toFixed(2) + ' W:' + si.windowWidth, icon: 'none', duration: 5000 });
+        // PC端用更紧凑的布局：基准375，但窄屏(<=400)额外缩0.85
+        const narrowScale = si.windowWidth <= 400 ? 0.85 : 1;
+        this.pcScale = Math.min(si.windowWidth, 800) / 375 * narrowScale;
+        wx.showToast({ title: 'scale:' + this.pcScale.toFixed(2), icon: 'none', duration: 3000 });
       } catch(e) {}
     }
     this.buttons = [];
@@ -421,7 +423,7 @@ export default class Main {
       this.safeTop = 0;
       this.safeBottom = this.height;
       this.pcOffsetX = 0;
-      this.pcScale = Math.min(realWidth, 800) / 375;
+      this.pcScale = Math.min(realWidth, 800) / 375 * (realWidth <= 400 ? 0.85 : 1);
     } else {
       this.width = realWidth;
       this.height = realHeight;
@@ -2158,30 +2160,30 @@ export default class Main {
 
     this.ctx.save();
     this.ctx.shadowColor = this.hexAlpha(exitColor, 0.86);
-    this.ctx.shadowBlur = 18;
+    this.ctx.shadowBlur = this.s(18);
     if (horizontal) {
-      const slotH = 24;
-      const slotW = Math.max(92, spanW + 18);
-      const slotX = clamp(spanX + spanW / 2 - slotW / 2, 8, this.width - slotW - 8);
-      const slotY = exit.side === 'top' ? this.boardY - slotH - 8 : this.boardY + this.boardSize + 8;
-      this.roundRect(slotX - 6, slotY - 5, slotW + 12, slotH + 10, 14, glow);
-      this.roundRect(slotX, slotY, slotW, slotH, 12, exitColor, '#ffffff', 3);
-      this.text(`${arrow} \u51fa\u53e3`, slotX + slotW / 2, slotY + 18, 17, dark, 'center', 'bold');
+      const slotH = this.s(24);
+      const slotW = Math.max(this.s(92), spanW + this.s(18));
+      const slotX = clamp(spanX + spanW / 2 - slotW / 2, this.s(8), this.width - slotW - this.s(8));
+      const slotY = exit.side === 'top' ? this.boardY - slotH - this.s(8) : this.boardY + this.boardSize + this.s(8);
+      this.roundRect(slotX - this.s(6), slotY - this.s(5), slotW + this.s(12), slotH + this.s(10), this.s(14), glow);
+      this.roundRect(slotX, slotY, slotW, slotH, this.s(12), exitColor, '#ffffff', this.s(3));
+      this.text(`${arrow} \u51fa\u53e3`, slotX + slotW / 2, slotY + this.s(18), this.s(17), dark, 'center', 'bold');
 
-      const edgeY = exit.side === 'top' ? this.boardY + 3 : this.boardY + this.boardSize - 7;
-      this.roundRect(spanX + 5, edgeY, spanW - 10, 8, 4, '#ffffff', exitColor, 2);
+      const edgeY = exit.side === 'top' ? this.boardY + this.s(3) : this.boardY + this.boardSize - this.s(7);
+      this.roundRect(spanX + this.s(5), edgeY, spanW - this.s(10), this.s(8), this.s(4), '#ffffff', exitColor, this.s(2));
     } else {
-      const slotW = 58;
-      const slotH = Math.max(84, spanH + 18);
-      const slotX = exit.side === 'left' ? this.boardX - slotW - 8 : this.boardX + this.boardSize + 8;
-      const slotY = clamp(spanY + spanH / 2 - slotH / 2, this.safeTop + 70, this.safeBottom - this.gameBannerReserve() - slotH - 92);
-      this.roundRect(slotX - 5, slotY - 6, slotW + 10, slotH + 12, 14, glow);
-      this.roundRect(slotX, slotY, slotW, slotH, 12, exitColor, '#ffffff', 3);
-      this.text(arrow, slotX + slotW / 2, slotY + slotH / 2 - 8, 24, dark, 'center', 'bold');
-      this.text('\u51fa\u53e3', slotX + slotW / 2, slotY + slotH / 2 + 23, 16, dark, 'center', 'bold');
+      const slotW = this.s(58);
+      const slotH = Math.max(this.s(84), spanH + this.s(18));
+      const slotX = exit.side === 'left' ? this.boardX - slotW - this.s(8) : this.boardX + this.boardSize + this.s(8);
+      const slotY = clamp(spanY + spanH / 2 - slotH / 2, this.safeTop + this.s(70), this.safeBottom - this.gameBannerReserve() - slotH - this.s(92));
+      this.roundRect(slotX - this.s(5), slotY - this.s(6), slotW + this.s(10), slotH + this.s(12), this.s(14), glow);
+      this.roundRect(slotX, slotY, slotW, slotH, this.s(12), exitColor, '#ffffff', this.s(3));
+      this.text(arrow, slotX + slotW / 2, slotY + slotH / 2 - this.s(8), this.s(24), dark, 'center', 'bold');
+      this.text('\u51fa\u53e3', slotX + slotW / 2, slotY + slotH / 2 + this.s(23), this.s(16), dark, 'center', 'bold');
 
-      const edgeX = exit.side === 'left' ? this.boardX + 3 : this.boardX + this.boardSize - 7;
-      this.roundRect(edgeX, spanY + 5, 8, spanH - 10, 4, '#ffffff', exitColor, 2);
+      const edgeX = exit.side === 'left' ? this.boardX + this.s(3) : this.boardX + this.boardSize - this.s(7);
+      this.roundRect(edgeX, spanY + this.s(5), this.s(8), spanH - this.s(10), this.s(4), '#ffffff', exitColor, this.s(2));
     }
     this.ctx.restore();
   }
@@ -2719,41 +2721,41 @@ export default class Main {
     const coinBonus = this.resultOverlay.coinBonus || 0;
     this.overlayPanel(stars >= 3 ? '\u5b8c\u7f8e\u901a\u5173' : '\u987a\u5229\u901a\u5173', '__stars__', '#ffcf77');
     this.renderConfetti();
-    const panel = this.modalRect(386);
-    this.text(`\u6b65\u6570 ${this.steps} / ${this.level.stepLimit}`, panel.x + panel.w / 2, panel.y + 154, 17, '#536173', 'center', 'bold');
+    const panel = this.modalRect(this.s(386));
+    this.text(`\u6b65\u6570 ${this.steps} / ${this.level.stepLimit}`, panel.x + panel.w / 2, panel.y + this.s(154), this.s(17), '#536173', 'center', 'bold');
     const rewardLabel = this.resultOverlay.firstClear ? '\u9996\u6b21\u901a\u5173\u5956\u52b1' : '\u91cd\u590d\u901a\u5173\u5956\u52b1';
-    this.text(`${rewardLabel} +${baseReward}`, panel.x + panel.w / 2, panel.y + 184, 18, '#ff7a00', 'center', 'bold');
-    if (coinBonus > 0) this.text(`\u91d1\u5e01\u683c +${coinBonus}`, panel.x + panel.w / 2, panel.y + 212, 17, '#f59e0b', 'center', 'bold');
+    this.text(`${rewardLabel} +${baseReward}`, panel.x + panel.w / 2, panel.y + this.s(184), this.s(18), '#ff7a00', 'center', 'bold');
+    if (coinBonus > 0) this.text(`\u91d1\u5e01\u683c +${coinBonus}`, panel.x + panel.w / 2, panel.y + this.s(212), this.s(17), '#f59e0b', 'center', 'bold');
     if (this.resultOverlay.doubleClaimed) {
-      this.text(`\u5df2\u53cc\u500d +${this.resultOverlay.doubleReward || reward}`, panel.x + panel.w / 2, panel.y + 236, 16, '#35a66a', 'center', 'bold');
+      this.text(`\u5df2\u53cc\u500d +${this.resultOverlay.doubleReward || reward}`, panel.x + panel.w / 2, panel.y + this.s(236), this.s(16), '#35a66a', 'center', 'bold');
     }
-    const buttonY = panel.y + 268;
-    const gap = 10;
-    const buttonW = Math.min(106, (panel.w - 58 - gap * 2) / 3);
+    const buttonY = panel.y + this.s(268);
+    const gap = this.s(10);
+    const buttonW = Math.min(this.s(106), (panel.w - this.s(58) - gap * 2) / 3);
     const startX = panel.x + panel.w / 2 - (buttonW * 3 + gap * 2) / 2;
-    this.button('\u8fd4\u56de', startX, buttonY, buttonW, 50, () => {
+    this.button('\u8fd4\u56de', startX, buttonY, buttonW, this.s(50), () => {
       this.scene = 'menu';
       this.tab = 'levels';
       this.jumpToLatestLevelPage();
       this.playMusic('bgm');
       this.play('click');
-    }, { fill: '#f8fafc', stroke: '#d8e1f0', text: '#334155', fontSize: 17 });
+    }, { fill: '#f8fafc', stroke: '#d8e1f0', text: '#334155', fontSize: this.s(17) });
     const doubleDisabled = this.resultOverlay.doubleClaimed || this.coinDoublePending;
-    this.button(doubleDisabled ? (this.coinDoublePending ? '\u62c9\u53d6\u4e2d' : '\u5df2\u53cc\u500d') : '\u53cc\u500d\u7ed3\u7b97', startX + buttonW + gap, buttonY, buttonW, 50, () => this.doubleCoinsWithAd(reward), {
+    this.button(doubleDisabled ? (this.coinDoublePending ? '\u62c9\u53d6\u4e2d' : '\u5df2\u53cc\u500d') : '\u53cc\u500d\u7ed3\u7b97', startX + buttonW + gap, buttonY, buttonW, this.s(50), () => this.doubleCoinsWithAd(reward), {
       fill: doubleDisabled ? '#eef2f7' : '#e9fff5',
       stroke: doubleDisabled ? '#d8e1f0' : '#74d99f',
       text: doubleDisabled ? '#9aa4b5' : '#125c39',
-      fontSize: 15,
+      fontSize: this.s(15),
       adIcon: !doubleDisabled,
       disabled: doubleDisabled,
     });
-    this.button('\u4e0b\u4e00\u5173', startX + (buttonW + gap) * 2, buttonY, buttonW, 50, () => {
+    this.button('\u4e0b\u4e00\u5173', startX + (buttonW + gap) * 2, buttonY, buttonW, this.s(50), () => {
       const next = Math.min(this.levels.length, this.level.levelId + 1);
       this.startLevel(next);
-    }, { fill: '#ffb020', stroke: '#ffffff', text: '#2f230e', fontSize: 17 });
+    }, { fill: '#ffb020', stroke: '#ffffff', text: '#2f230e', fontSize: this.s(17) });
   }
 
-  renderStars(cx, cy, stars, size = 30, gap = 7) {
+  renderStars(cx, cy, stars, size = this.s(30), gap = this.s(7)) {
     const icon = ASSET.image.starIcon;
     const totalW = size * 3 + gap * 2;
     const startX = cx - totalW / 2;
