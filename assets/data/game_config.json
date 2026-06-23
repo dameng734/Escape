@@ -2,6 +2,7 @@
   "showAdButtons": false,
   "hideAdFeatures": true,
   "visibleLevelMax": 180,
+  "adminUnlimitedHint": true,
   "hiddenCharacterSkins": [
     "cat_lihua",
     "turtle_green",

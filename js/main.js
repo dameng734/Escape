@@ -353,9 +353,11 @@ export default class Main {
     this.addStepStarBonus = 0;
     this.stepLimitBonusEffect = null;
     this.hintUsesByLevel = new Map();
+    this.hintAdUsesByLevel = new Map();
     this.hintPathCache = null;
     this.hintMoveCache = new Map();
     this.hintPending = false;
+    this.hintAdPending = false;
     this.hintBlockId = '';
     this.hintUntil = 0;
     this.lastSolveStatus = '';
@@ -939,6 +941,7 @@ export default class Main {
       loginDays: Number(info.loginDays) || 0,
       continuousLoginDays: Number(info.continuousLoginDays) || 0,
       isSuperAdmin: info.isSuperAdmin === true,
+      isHintAdmin: info.isHintAdmin === true,
     };
     if (Array.isArray(info.grantedSkins) && info.grantedSkins.length) {
       const owned = new Set(this.save.ownedCharacterSkins || []);
@@ -956,7 +959,7 @@ export default class Main {
   }
 
   hasUnlimitedHints() {
-    return this.isSuperAdmin();
+    return this.config.game.adminUnlimitedHint === true && this.userLoginInfo?.isHintAdmin === true;
   }
 
   startCloudPeriodicSync() {
@@ -1976,6 +1979,7 @@ export default class Main {
     this.hintPending = false;
     this.hintBlockId = '';
     this.hintUntil = 0;
+    this.hintAdPending = false;
     this.tutorialOverlay = this.tutorialOverlayForLevel(source);
     this.confetti = [];
     this.scene = 'game';
@@ -2572,13 +2576,26 @@ export default class Main {
         ? ['\u64a4\u9500', () => this.undoWithAd(), '#ffffff', '#d8e1f0', { adIcon: undoNeedsAd, freeBadge: !undoNeedsAd }]
         : ['\u64a4\u9500', () => this.undo(), '#ffffff', '#d8e1f0', { freeBadge: this.undoLeft > 0, disabled: this.undoLeft <= 0 }],
     ];
+    // \u63d0\u793a\u6309\u94ae\uff1a\u6240\u6709\u7528\u6237\u53ef\u89c1
+    const hintDisabled = this.hintPending || this.hintAdPending;
     if (unlimitedHints) {
       items.push([
-        this.hintPending ? '\u6c42\u89e3\u4e2d' : '\u63d0\u793a',
-        () => this.hintWithAd(),
-        '#fff4db',
-        '#ffce72',
-        { disabled: this.hintPending, hintButton: true },
+        this.hintPending ? '\u601d\u8003\u4e2d' : '\u63d0\u793a',
+        () => this.requestHint(),
+        '#fff4db', '#ffce72',
+        { disabled: hintDisabled, hintButton: true },
+      ]);
+    } else {
+      const freeLeft = this.hintFreeUsesLeft();
+      const adLeft = this.hintAdUsesLeft();
+      const allUsed = freeLeft <= 0 && adLeft <= 0;
+      const needAd = freeLeft <= 0 && adLeft > 0;
+      const label = this.hintPending ? '\u601d\u8003\u4e2d' : this.hintAdPending ? '\u5e7f\u544a\u4e2d' : '\u63d0\u793a';
+      items.push([
+        label,
+        () => this.requestHint(),
+        '#fff4db', '#ffce72',
+        { disabled: allUsed || hintDisabled, hintButton: true, adIcon: needAd && !allUsed, freeBadge: freeLeft > 0 && !needAd },
       ]);
     }
     if (this.addStepsAdEnabled()) items.push([this.addStepsButtonLabel(), () => this.addStepsWithAd(), '#e9fff5', '#74d99f', { adIcon: !this.addStepsUsed && !this.addStepsPending, disabled: this.addStepsUsed || this.addStepsPending }]);
@@ -2830,23 +2847,114 @@ export default class Main {
     return Math.max(0, Number(this.config.ads.rewards?.hint?.freeUses) || 2);
   }
 
+  hintAdUseLimit() {
+    return 2;
+  }
+
   hintUseLimit() {
-    return Math.max(this.hintFreeUseLimit(), Number(this.config.ads.rewards?.hint?.maxUsesPerLevel) || 3);
+    return this.hintFreeUseLimit() + this.hintAdUseLimit();
   }
 
   hintUsesForCurrentLevel() {
     return Math.max(0, Number(this.hintUsesByLevel.get(this.level?.levelId)) || 0);
   }
 
-  consumeHintUse() {
+  hintAdUsesForCurrentLevel() {
+    return Math.max(0, Number(this.hintAdUsesByLevel.get(this.level?.levelId)) || 0);
+  }
+
+  hintFreeUsesLeft() {
+    if (this.hasUnlimitedHints()) return 999;
+    return this.hintFreeUseLimit() - this.hintUsesForCurrentLevel();
+  }
+
+  hintAdUsesLeft() {
+    if (this.hasUnlimitedHints()) return 999;
+    return this.hintAdUseLimit() - this.hintAdUsesForCurrentLevel();
+  }
+
+  consumeHintFreeUse() {
     if (this.hasUnlimitedHints() || !this.level) return;
     this.hintUsesByLevel.set(this.level.levelId, this.hintUsesForCurrentLevel() + 1);
   }
 
-  hintWithAd() {
-    if (this.hintPending || this.finished) return;
-    if (!this.hasUnlimitedHints()) return;
-    this.showHint(false);
+  consumeHintAdUse() {
+    if (this.hasUnlimitedHints() || !this.level) return;
+    this.hintAdUsesByLevel.set(this.level.levelId, this.hintAdUsesForCurrentLevel() + 1);
+  }
+
+  // 提示入口：免费次数优先，用完后走广告
+  requestHint() {
+    if (this.hintPending || this.hintAdPending || this.finished) return;
+    const freeLeft = this.hintFreeUsesLeft();
+    const adLeft = this.hintAdUsesLeft();
+    if (this.hasUnlimitedHints()) {
+      this._doHint();
+    } else if (freeLeft > 0) {
+      this._doHint();
+    } else if (adLeft > 0) {
+      this._doHintWithAd();
+    }
+  }
+
+  _doHint() {
+    this.hintPending = true;
+    setTimeout(() => {
+      try {
+        const result = this.basicHintSolve();
+        if (result) {
+          if (!this.hasUnlimitedHints()) this.consumeHintFreeUse();
+          this.hintBlockId = result.blockId;
+          this.hintUntil = Date.now() + 4000;
+          if (this.hasUnlimitedHints()) {
+            this.showToast(`高亮方块向${this.dirText(result.dir)}移动 ${result.amount} 格`, 4000);
+          } else {
+            const freeLeft = this.hintFreeUsesLeft();
+            const adLeft = this.hintAdUsesLeft();
+            const totalLeft = freeLeft + adLeft;
+            this.showToast(`高亮方块向${this.dirText(result.dir)}移动 ${result.amount} 格`, 4000, `提示次数剩余 ${totalLeft} 次`);
+          }
+          this.play('star');
+        } else {
+          this.showToast('未找到解法，请尝试撤销或重来', 4000);
+        }
+      } finally {
+        this.hintPending = false;
+      }
+    }, 16);
+  }
+
+  _doHintWithAd() {
+    this.hintAdPending = true;
+    this.showRewarded('hint').then((result) => {
+      if (!result.ok) {
+        this.showToast(result.message || '广告未完成');
+        return;
+      }
+      // 广告成功后执行提示
+      this.hintPending = true;
+      setTimeout(() => {
+        try {
+          const hintResult = this.basicHintSolve();
+          if (hintResult) {
+            this.consumeHintAdUse();
+            this.hintBlockId = hintResult.blockId;
+            this.hintUntil = Date.now() + 4000;
+            const freeLeft = this.hintFreeUsesLeft();
+            const adLeft = this.hintAdUsesLeft();
+            const totalLeft = freeLeft + adLeft;
+            this.showToast(`高亮方块向${this.dirText(hintResult.dir)}移动 ${hintResult.amount} 格`, 4000, `提示次数剩余 ${totalLeft} 次`);
+            this.play('star');
+          } else {
+            this.showToast('未找到解法，请尝试撤销或重来', 4000);
+          }
+        } finally {
+          this.hintPending = false;
+        }
+      }, 16);
+    }).finally(() => {
+      this.hintAdPending = false;
+    });
   }
 
   currentHintStateKey() {
@@ -5558,6 +5666,274 @@ export default class Main {
     return dir === 'L' ? '\u5de6' : dir === 'R' ? '\u53f3' : dir === 'U' ? '\u4e0a' : '\u4e0b';
   }
 
+  // \u2500\u2500 BFS\u6c42\u89e3\u5668\uff1a\u5355\u6b65\u5c55\u5f00\u4fdd\u8bc1\u6700\u4f18\uff0c\u56de\u6eaf\u5408\u5e76\u5f97\u5230\u5408\u9002\u7684\u79fb\u52a8\u8ddd\u79bb \u2500\u2500
+
+  basicHintSolve() {
+    if (!this.level || !this.blocks) return null;
+    const W = this.level.width;
+    const H = this.level.height;
+    const exit = this.level.exit;
+    const targetId = this.level.targetId;
+    const area = W * H;
+
+    const curTarget = this.blocks.find((b) => b.id === targetId);
+    if (curTarget && this.hasReachedExit(curTarget)) return null;
+
+    // 每次从当前棋盘状态BFS求解，不缓存、不回放设计者路径
+    const mov = [];
+    const fixedMap = new Uint8Array(area);
+    for (const b of this.blocks) {
+      if (b.type === 'target' || (b.type === 'normal' && b.moveDir !== 'none')) {
+        mov.push({ id: b.id, isT: b.id === targetId, w: b.w, h: b.h, x: b.x, y: b.y, md: b.moveDir });
+      } else {
+        for (let dy = 0; dy < b.h; dy++)
+          for (let dx = 0; dx < b.w; dx++)
+            fixedMap[(b.x + dx) * H + (b.y + dy)] = 1;
+      }
+    }
+    const n = mov.length;
+    const ti = mov.findIndex((b) => b.isT);
+    if (ti < 0) return null;
+
+    const bw = new Uint8Array(n);
+    const bh = new Uint8Array(n);
+    const canH = new Uint8Array(n);
+    const canV = new Uint8Array(n);
+    const isT = new Uint8Array(n);
+    for (let i = 0; i < n; i++) {
+      bw[i] = mov[i].w; bh[i] = mov[i].h;
+      canH[i] = (mov[i].md === 'horizontal' || mov[i].md === 'both') ? 1 : 0;
+      canV[i] = (mov[i].md === 'vertical' || mov[i].md === 'both') ? 1 : 0;
+      isT[i] = mov[i].isT ? 1 : 0;
+    }
+    const tw = bw[ti], th = bh[ti];
+    const exitSide = exit.side;
+    const exitY = exit.y, exitX = exit.x;
+
+    const makeKey = (pos) => {
+      const p = new Array(n);
+      for (let i = 0; i < n; i++) p[i] = pos[i * 2] * H + pos[i * 2 + 1];
+      return p.join(',');
+    };
+
+    const buildGrid = (pos) => {
+      const g = new Uint8Array(fixedMap);
+      for (let i = 0; i < n; i++) {
+        const bx = pos[i * 2], by = pos[i * 2 + 1];
+        for (let dy = 0; dy < bh[i]; dy++)
+          for (let dx = 0; dx < bw[i]; dx++)
+            g[(bx + dx) * H + (by + dy)] = i + 2;
+      }
+      return g;
+    };
+
+    const isGoal = (pos) => {
+      const tx = pos[ti * 2], ty = pos[ti * 2 + 1];
+      if (exitSide === 'right') return ty === exitY && tx + tw > W - 1;
+      if (exitSide === 'left') return ty === exitY && tx < 0;
+      if (exitSide === 'top') return tx === exitX && ty < 0;
+      return tx === exitX && ty + th > H - 1;
+    };
+
+    const genMoves = (pos, grid) => {
+      const moves = [];
+      for (let i = 0; i < n; i++) {
+        const bx = pos[i * 2], by = pos[i * 2 + 1], w = bw[i], h = bh[i], me = i + 2;
+        // 每个方向尝试1格、2格...直到碰壁，生成所有合法滑动距离
+        if (canH[i]) {
+          for (let s = 1; ; s++) {
+            const nx = bx - s;
+            if (nx < 0) break;
+            let ok = true;
+            for (let dy = 0; dy < h && ok; dy++)
+              for (let dx = 0; dx < w && ok; dx++) { const v = grid[(nx + dx) * H + (by + dy)]; if (v && v !== me) ok = false; }
+            if (!ok) break;
+            moves.push({ bi: i, ddx: -s, ddy: 0, dir: 'L', amount: s });
+          }
+          for (let s = 1; ; s++) {
+            const nx = bx + s;
+            if (nx + w > W) break;
+            let ok = true;
+            for (let dy = 0; dy < h && ok; dy++)
+              for (let dx = 0; dx < w && ok; dx++) { const v = grid[(nx + dx) * H + (by + dy)]; if (v && v !== me) ok = false; }
+            if (!ok) break;
+            moves.push({ bi: i, ddx: s, ddy: 0, dir: 'R', amount: s });
+          }
+        }
+        if (canV[i]) {
+          for (let s = 1; ; s++) {
+            const ny = by - s;
+            if (ny < 0) break;
+            let ok = true;
+            for (let dy = 0; dy < h && ok; dy++)
+              for (let dx = 0; dx < w && ok; dx++) { const v = grid[(bx + dx) * H + (ny + dy)]; if (v && v !== me) ok = false; }
+            if (!ok) break;
+            moves.push({ bi: i, ddx: 0, ddy: -s, dir: 'U', amount: s });
+          }
+          for (let s = 1; ; s++) {
+            const ny = by + s;
+            if (ny + h > H) break;
+            let ok = true;
+            for (let dy = 0; dy < h && ok; dy++)
+              for (let dx = 0; dx < w && ok; dx++) { const v = grid[(bx + dx) * H + (ny + dy)]; if (v && v !== me) ok = false; }
+            if (!ok) break;
+            moves.push({ bi: i, ddx: 0, ddy: s, dir: 'D', amount: s });
+          }
+        }
+        // 目标块向出口方向允许滑出边界
+        if (isT[i]) {
+          if (exitSide === 'right' && canH[i] && by === exitY && bx + w === W)
+            moves.push({ bi: i, ddx: 1, ddy: 0, dir: 'R', amount: 1 });
+          else if (exitSide === 'left' && canH[i] && by === exitY && bx === 0)
+            moves.push({ bi: i, ddx: -1, ddy: 0, dir: 'L', amount: 1 });
+          else if (exitSide === 'top' && canV[i] && bx === exitX && by === 0)
+            moves.push({ bi: i, ddx: 0, ddy: -1, dir: 'U', amount: 1 });
+          else if (exitSide === 'bottom' && canV[i] && bx === exitX && by + h === H)
+            moves.push({ bi: i, ddx: 0, ddy: 1, dir: 'D', amount: 1 });
+        }
+      }
+      return moves;
+    };
+
+    const initPos = new Int16Array(n * 2);
+    for (let i = 0; i < n; i++) { initPos[i * 2] = mov[i].x; initPos[i * 2 + 1] = mov[i].y; }
+    if (isGoal(initPos)) return null;
+
+    const initKey = makeKey(initPos);
+    const visited = new Set([initKey]);
+    const parentMap = new Map();
+    const queue = [initKey];
+    const posStore = new Map([[initKey, initPos]]);
+    let head = 0;
+    const maxNodes = 2000000;
+    let expanded = 0;
+    const deadline = Date.now() + 5000;
+
+    while (head < queue.length && expanded < maxNodes && Date.now() < deadline) {
+      const curKey = queue[head++];
+      const pos = posStore.get(curKey);
+      expanded++;
+      const grid = buildGrid(pos);
+      const moves = genMoves(pos, grid);
+      for (const mv of moves) {
+        const np = pos.slice();
+        np[mv.bi * 2] += mv.ddx;
+        np[mv.bi * 2 + 1] += mv.ddy;
+        const nk = makeKey(np);
+        if (visited.has(nk)) continue;
+        visited.add(nk);
+        parentMap.set(nk, { pk: curKey, bi: mv.bi, dir: mv.dir, amount: mv.amount });
+        posStore.set(nk, np);
+        if (isGoal(np)) {
+          const path = [];
+          let cursor = nk;
+          while (parentMap.has(cursor)) { const it = parentMap.get(cursor); path.push(it); cursor = it.pk; }
+          path.reverse();
+          const first = path[0];
+          const result = { blockId: mov[first.bi].id, dir: first.dir, amount: first.amount, remaining: path.length };
+          return result;
+        }
+        queue.push(nk);
+      }
+    }
+    return null;
+  }
+
+  _basicHintFromCache() {
+    const c = this._basicHintCache;
+    if (!c || c.levelId !== this.level?.levelId) return null;
+    const block = this.blocks.find((b) => b.id === c.move.blockId);
+    if (!block) return null;
+    const axis = c.move.dir === 'L' || c.move.dir === 'R' ? 'horizontal' : 'vertical';
+    const sign = c.move.dir === 'L' || c.move.dir === 'U' ? -1 : 1;
+    const current = axis === 'horizontal' ? block.x : block.y;
+    const target = current + sign * c.move.amount;
+    const range = this.getMoveRange(block, axis);
+    if (target >= range.min && target <= range.max && target !== current) return c.move;
+    return null;
+  }
+
+  _basicHintDesignerPath() {
+    const solution = this.level?.designerSolution;
+    if (!Array.isArray(solution) || !solution.length) return null;
+    const pc = this._basicHintPathCache;
+    const curKey = this._makeBasicKey();
+    if (pc && pc.levelId === this.level?.levelId && pc.steps.length) {
+      const step = pc.steps.find((s) => s.fromKey === curKey);
+      if (step) {
+        const mov = this._getBasicMov();
+        return { blockId: mov[step.m.bi]?.id || '?', dir: step.m.dir, amount: step.m.amount, remaining: pc.steps.length - pc.steps.indexOf(step) };
+      }
+    }
+    const initPos = this._getBasicInitPos();
+    if (!initPos) return null;
+    const mov = this._getBasicMov();
+    const n = mov.length;
+    const H = this.level.height;
+    const mk = (pos) => { const p = []; for (let i = 0; i < n; i++) p.push(pos[i * 2] * H + pos[i * 2 + 1]); return p.join(','); };
+    let pos = initPos;
+    let ck = mk(pos);
+    const stateKey = curKey;
+    if (ck === stateKey) {
+      const first = this.parseDesignerMove(solution[0]);
+      return first ? { blockId: first.blockId, dir: first.dir, amount: first.amount, remaining: solution.length } : null;
+    }
+    const path = [{ fromKey: ck, m: null }];
+    for (let si = 0; si < solution.length; si++) {
+      const parsed = this.parseDesignerMove(solution[si]);
+      if (!parsed) return null;
+      const mi = mov.findIndex((b) => b.id === parsed.blockId);
+      if (mi < 0) continue;
+      const ddx = parsed.dir === 'L' ? -parsed.amount : parsed.dir === 'R' ? parsed.amount : 0;
+      const ddy = parsed.dir === 'U' ? -parsed.amount : parsed.dir === 'D' ? parsed.amount : 0;
+      const np = pos.slice();
+      np[mi * 2] += ddx;
+      np[mi * 2 + 1] += ddy;
+      const nk = mk(np);
+      path.push({ fromKey: ck, m: { bi: mi, dir: parsed.dir, amount: parsed.amount } });
+      ck = nk;
+      pos = np;
+      if (ck === stateKey) {
+        this._basicHintPathCache = { levelId: this.level.levelId, steps: path.slice(1), startKey: stateKey };
+        if (si + 1 < solution.length) {
+          const next = this.parseDesignerMove(solution[si + 1]);
+          return next ? { blockId: next.blockId, dir: next.dir, amount: next.amount, remaining: solution.length - si - 1 } : null;
+        }
+        return null;
+      }
+    }
+    return null;
+  }
+
+  _makeBasicKey() {
+    const mov = this._getBasicMov();
+    const H = this.level.height;
+    const p = [];
+    for (let i = 0; i < mov.length; i++) p.push(mov[i].x * H + mov[i].y);
+    return p.join(',');
+  }
+
+  _getBasicMov() {
+    if (!this.level || !this.blocks) return [];
+    const targetId = this.level.targetId;
+    return this.blocks
+      .filter((b) => b.type === 'target' || (b.type === 'normal' && b.moveDir !== 'none'))
+      .map((b) => ({ id: b.id, isT: b.id === targetId, w: b.w, h: b.h, x: b.x, y: b.y, md: b.moveDir }));
+  }
+
+  _getBasicInitPos() {
+    const mov = [];
+    const targetId = this.level.targetId;
+    for (const b of this.level.blocks) {
+      if (b.type === 'target' || (b.type === 'normal' && b.moveDir !== 'none')) {
+        mov.push({ id: b.id, isT: b.id === targetId, w: b.w, h: b.h, x: b.x, y: b.y, md: b.moveDir });
+      }
+    }
+    const pos = new Int16Array(mov.length * 2);
+    for (let i = 0; i < mov.length; i++) { pos[i * 2] = mov[i].x; pos[i * 2 + 1] = mov[i].y; }
+    return pos;
+  }
+
   facingFromMove(axis, delta) {
     if (axis === 'horizontal') return delta < 0 ? 'left' : 'right';
     return delta < 0 ? 'up' : 'down';
@@ -5593,17 +5969,38 @@ export default class Main {
     }
   }
 
-  showToast(message, duration = 1800) {
-    this.toast = { message, until: Date.now() + Math.max(0, Number(duration) || 1800) };
+  showToast(message, duration = 1800, sub) {
+    this.toast = { message, sub, until: Date.now() + Math.max(0, Number(duration) || 1800) };
   }
 
   renderToast() {
     if (!this.toast || Date.now() > this.toast.until) return;
-    const w = Math.min(this.width - 48, this.ctx.measureText(this.toast.message).width + 50);
+    const fontSize = 18;
+    const subSize = 14;
+    this.ctx.font = `bold ${fontSize}px sans-serif`;
+    const mainW = this.ctx.measureText(this.toast.message).width + 40;
+    let subW = 0;
+    if (this.toast.sub) {
+      this.ctx.font = `${subSize}px sans-serif`;
+      subW = this.ctx.measureText(this.toast.sub).width + 40;
+    }
+    const w = Math.min(this.width - 48, Math.max(mainW, subW));
     const x = (this.width - w) / 2;
-    const y = this.height * 0.76;
-    this.roundRect(x, y, w, 42, 21, 'rgba(15,23,42,0.78)');
-    this.text(this.toast.message, this.width / 2, y + 27, 15, '#ffffff', 'center', 'bold');
+    const h = this.toast.sub ? 62 : 48;
+    let y = this.height - 140 - this.gameBannerReserve();
+    if (this.scene === 'game' && this.boardY && this.boardSize) {
+      const toolsY = Math.min(this.height - 82 - this.gameBannerReserve(), this.safeBottom - 86 - this.gameBannerReserve());
+      const boardBottom = this.boardY + this.boardSize + 18;
+      const toolsTop = toolsY - 8;
+      if (toolsTop > boardBottom) {
+        y = boardBottom + (toolsTop - boardBottom - h) / 2;
+      }
+    }
+    this.roundRect(x, y, w, h, 24, 'rgba(15,23,42,0.82)');
+    this.text(this.toast.message, this.width / 2, y + (this.toast.sub ? 26 : 31), fontSize, '#ffffff', 'center', 'bold');
+    if (this.toast.sub) {
+      this.text(this.toast.sub, this.width / 2, y + 48, subSize, 'rgba(255,255,255,0.7)', 'center', 'normal');
+    }
   }
 
   panelRect(y) {

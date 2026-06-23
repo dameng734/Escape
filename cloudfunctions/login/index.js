@@ -72,6 +72,18 @@ async function isSuperAdmin(openid) {
   }
 }
 
+async function isHintAdmin(openid) {
+  try {
+    const res = await db.collection(COLLECTIONS.adminUsers)
+      .where({ openid })
+      .limit(1)
+      .get();
+    return !!res.data?.length;
+  } catch (error) {
+    return false;
+  }
+}
+
 async function safeGet(collection, id) {
   try {
     const res = await db.collection(collection).doc(id).get();
@@ -147,6 +159,7 @@ exports.main = async (event = {}) => {
   const riskLevel = normalizeRiskLevel(risk.level);
   const dailyAdLimit = AD_LIMIT_BY_RISK_LEVEL[riskLevel] ?? 0;
   const superAdmin = await isSuperAdmin(openid);
+  const hintAdmin = await isHintAdmin(openid);
 
   const userDoc = await safeGet(COLLECTIONS.users, openid);
   const dailyLoginId = `${openid}_${loginDate}`;
@@ -232,5 +245,6 @@ exports.main = async (event = {}) => {
     firstLoginToday,
     grantedSkins,
     isSuperAdmin: superAdmin,
+    isHintAdmin: hintAdmin,
   };
 };
