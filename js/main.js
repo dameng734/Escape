@@ -312,10 +312,13 @@ export default class Main {
     this.images = new Map();
 
     // ── PC端适配：平台检测 ──
-    const _sysInfo = wxRuntime?.getSystemInfoSync?.() || {};
-    this.isPC = ['windows', 'mac', 'devtools'].includes(String(_sysInfo.platform || '').toLowerCase());
-    console.log('[PC适配] platform:', _sysInfo.platform, 'isPC:', this.isPC);
+    let _platform = '';
+    try { _platform = (wx.getSystemInfoSync().platform || '').toLowerCase(); } catch(e) {}
+    this.isPC = _platform === 'windows' || _platform === 'mac' || _platform === 'devtools';
     this.pcOffsetX = 0;
+    if (this.isPC) {
+      wx.showToast({ title: 'PC模式已启用', icon: 'none', duration: 3000 });
+    }
     this.buttons = [];
     this.toast = null;
     this.scene = 'home';
