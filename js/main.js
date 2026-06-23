@@ -317,6 +317,13 @@ export default class Main {
     this.isPC = _platform === 'windows' || _platform === 'mac' || _platform === 'devtools';
     this.pcOffsetX = 0;
     this.pcScale = 1;
+    if (this.isPC) {
+      try {
+        const si = wx.getSystemInfoSync();
+        this.pcScale = Math.min(si.windowWidth, 800) / 375;
+        wx.showToast({ title: 'scale:' + this.pcScale.toFixed(2) + ' W:' + si.windowWidth, icon: 'none', duration: 5000 });
+      } catch(e) {}
+    }
     this.buttons = [];
     this.toast = null;
     this.scene = 'home';
@@ -407,14 +414,13 @@ export default class Main {
     this.dpr = info.pixelRatio || 1;
     const realWidth = info.windowWidth || info.screenWidth || 375;
     const realHeight = info.windowHeight || info.screenHeight || 667;
-    // ── PC端适配：计算缩放因子，所有布局元素按此比例缩放 ──
+    // ── PC端适配：计算缩放因子 ──
     if (this.isPC) {
       this.width = realWidth;
       this.height = realHeight;
       this.safeTop = 0;
       this.safeBottom = this.height;
       this.pcOffsetX = 0;
-      // 基准宽度375px(iPhone6)，pcScale让布局自动适配任意窗口宽度
       this.pcScale = Math.min(realWidth, 800) / 375;
     } else {
       this.width = realWidth;
