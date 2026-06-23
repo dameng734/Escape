@@ -424,7 +424,9 @@ export default class Main {
       this.pcOffsetX = 0;
     }
     this.menuButton = wxRuntime?.getMenuButtonBoundingClientRect ? wxRuntime.getMenuButtonBoundingClientRect() : null;
-    this.canvas.width = Math.floor(this.width * this.dpr);
+    // PC端canvas用全宽，以便translate居中绘制
+    const canvasW = this.isPC ? realWidth : this.width;
+    this.canvas.width = Math.floor(canvasW * this.dpr);
     this.canvas.height = Math.floor(this.height * this.dpr);
     if (this.ctx.setTransform) this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     else {
@@ -1331,8 +1333,8 @@ export default class Main {
     this.buttons = [];
     // ── PC端适配：全屏清空，游戏区域居中偏移 ──
     if (this.isPC && this.pcOffsetX) {
-      this.ctx.clearRect(0, 0, this.width + this.pcOffsetX * 2, this.height);
-      // 两侧留白
+      const fullW = this.width + this.pcOffsetX * 2;
+      this.ctx.clearRect(0, 0, fullW, this.height);
       this.ctx.fillStyle = '#f0f4f8';
       this.ctx.fillRect(0, 0, this.pcOffsetX, this.height);
       this.ctx.fillRect(this.pcOffsetX + this.width, 0, this.pcOffsetX, this.height);
