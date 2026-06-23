@@ -310,6 +310,10 @@ export default class Main {
     this.canvas = wxRuntime?.createCanvas ? wxRuntime.createCanvas() : canvas;
     this.ctx = this.canvas.getContext('2d');
     this.images = new Map();
+
+    // ── PC端适配：平台检测 ──
+    const _sysInfo = wxRuntime?.getSystemInfoSync?.() || {};
+    this.isPC = ['windows', 'mac', 'devtools'].includes(String(_sysInfo.platform || '').toLowerCase());
     this.buttons = [];
     this.toast = null;
     this.scene = 'home';
@@ -373,13 +377,22 @@ export default class Main {
     this.resize();
     this.bindEvents();
     this.loadData();
-    this.initCloud();
+    // ── PC端适配：延迟云初始化，等待JS桥接就绪 ──
+    if (this.isPC) {
+      setTimeout(() => {
+        this.initCloud();
+        this.pullCloudSave();
+        this.startCloudPeriodicSync();
+      }, 3000);
+    } else {
+      this.initCloud();
+      this.pullCloudSave();
+      this.startCloudPeriodicSync();
+    }
     this.loadCachedUserProfile();
     this.save = this.loadSave();
     this.initShare();
     this.initRankContext();
-    this.pullCloudSave();
-    this.startCloudPeriodicSync();
     this.queueRankSubmit(0);
     this.startLoading();
     this.loop = this.loop.bind(this);
@@ -391,8 +404,14 @@ export default class Main {
     this.dpr = info.pixelRatio || 1;
     this.width = info.windowWidth || info.screenWidth || 375;
     this.height = info.windowHeight || info.screenHeight || 667;
-    this.safeTop = info.safeArea?.top || 0;
-    this.safeBottom = info.safeArea?.bottom || this.height;
+    // ── PC端适配：无安全区 ──
+    if (this.isPC) {
+      this.safeTop = 0;
+      this.safeBottom = this.height;
+    } else {
+      this.safeTop = info.safeArea?.top || 0;
+      this.safeBottom = info.safeArea?.bottom || this.height;
+    }
     this.menuButton = wxRuntime?.getMenuButtonBoundingClientRect ? wxRuntime.getMenuButtonBoundingClientRect() : null;
     this.canvas.width = Math.floor(this.width * this.dpr);
     this.canvas.height = Math.floor(this.height * this.dpr);
@@ -748,23 +767,45 @@ export default class Main {
 
   initCloud() {
     if (!wxRuntime?.cloud?.init || !wxRuntime?.cloud?.database) return;
-    try {
-      wxRuntime.cloud.init({
-        env: CLOUD_ENV_ID,
-        traceUser: true,
-      });
-      this.cloudReady = true;
-      this.cloudDocId = wxRuntime.getStorageSync?.(CLOUD_DOC_ID_KEY) || '';
-      this.cloudUserId = wxRuntime.getStorageSync?.(CLOUD_USER_ID_KEY) || '';
-    } catch (error) {
-      this.cloudReady = false;
-      console.warn('\u4e91\u5f00\u53d1\u521d\u59cb\u5316\u5931\u8d25\uff0c\u5c06\u7ee7\u7eed\u4f7f\u7528\u672c\u5730\u5b58\u6863', error);
-    }
+    const tryInit = (retriesLeft) => {
+      try {
+        wxRuntime.cloud.init({
+          env: CLOUD_ENV_ID,
+          traceUser: true,
+        });
+        this.cloudReady = true;
+        this.cloudDocId = wxRuntime.getStorageSync?.(CLOUD_DOC_ID_KEY) || '';
+        this.cloudUserId = wxRuntime.getStorageSync?.(CLOUD_USER_ID_KEY) || '';
+      } catch (error) {
+        if (retriesLeft > 0) {
+          console.warn('\u4e91\u5f00\u53d1\u521d\u59cb\u5316\u5931\u8d25\uff0c1\u79d2\u540e\u91cd\u8bd5', error);
+          setTimeout(() => tryInit(retriesLeft - 1), 1000);
+        } else {
+          this.cloudReady = false;
+          console.warn('\u4e91\u5f00\u53d1\u521d\u59cb\u5316\u5931\u8d25\uff0c\u5c06\u7ee7\u7eed\u4f7f\u7528\u672c\u5730\u5b58\u6863', error);
+        }
+      }
+    };
+    tryInit(5);
+  }
+
+  // 云函数调用包装：自动重试，减少网络波动导致的失败
+  callCloudFunction(params) {
+    // ── PC端适配：更多重试、更长间隔 ──
+    const maxRetries = this.isPC ? 8 : 5;
+    const retryDelay = this.isPC ? 1000 : 500;
+    const call = () => wxRuntime.cloud.callFunction(params);
+    const attempt = (retriesLeft) => call().catch((error) => {
+      if (retriesLeft <= 0) throw error;
+      console.warn('云函数调用失败，重试中', params.name, `剩余${retriesLeft}次`, error);
+      return new Promise((resolve) => setTimeout(resolve, retryDelay)).then(() => attempt(retriesLeft - 1));
+    });
+    return attempt(maxRetries);
   }
 
   ensureCloudUserId() {
     if (!this.cloudReady || !wxRuntime?.cloud?.callFunction) return Promise.resolve('');
-    return wxRuntime.cloud.callFunction({
+    return this.callCloudFunction({
       name: CLOUD_LOGIN_FUNCTION,
       data: {
         profile: this.userProfile || {},
@@ -812,7 +853,7 @@ export default class Main {
       if (this.scene === 'menu' && this.tab === 'levels') this.jumpToLatestLevelPage();
     };
     const request = this.ensureCloudUserId()
-      .then(() => wxRuntime.cloud.callFunction({
+      .then(() => this.callCloudFunction({
         name: CLOUD_GAME_STATE_FUNCTION,
         data: { action: 'get' },
       }))
@@ -991,7 +1032,7 @@ export default class Main {
       this.queueCloudSave(3000);
       return;
     }
-    const request = wxRuntime.cloud.callFunction({
+    const request = this.callCloudFunction({
       name: CLOUD_GAME_STATE_FUNCTION,
       data: {
         action: 'save',
@@ -1128,6 +1169,8 @@ export default class Main {
   }
 
   adsHidden() {
+    // ── PC端适配：PC不支持激励视频广告 ──
+    if (this.isPC) return true;
     return this.config.game.hideAdFeatures === true || this.config.game.showAdButtons === false || this.config.ads.enabled === false;
   }
 
@@ -2587,9 +2630,9 @@ export default class Main {
       ]);
     } else {
       const freeLeft = this.hintFreeUsesLeft();
-      const adLeft = this.hintAdUsesLeft();
+      const adLeft = this.isPC ? 0 : this.hintAdUsesLeft();
       const allUsed = freeLeft <= 0 && adLeft <= 0;
-      const needAd = freeLeft <= 0 && adLeft > 0;
+      const needAd = !this.isPC && freeLeft <= 0 && adLeft > 0;
       const label = this.hintPending ? '\u601d\u8003\u4e2d' : this.hintAdPending ? '\u5e7f\u544a\u4e2d' : '\u63d0\u793a';
       items.push([
         label,
@@ -2847,8 +2890,9 @@ export default class Main {
     return Math.max(0, Number(this.config.ads.rewards?.hint?.freeUses) || 2);
   }
 
+  // ── PC端适配：广告次数限制为0 ──
   hintAdUseLimit() {
-    return 2;
+    return this.isPC ? 0 : 2;
   }
 
   hintUseLimit() {
@@ -3945,7 +3989,7 @@ export default class Main {
 
   callAdReward(action, type, extra = {}) {
     if (!this.cloudReady || !wxRuntime?.cloud?.callFunction) return Promise.resolve(null);
-    return wxRuntime.cloud.callFunction({
+    return this.callCloudFunction({
       name: CLOUD_AD_REWARD_FUNCTION,
       data: {
         action,
