@@ -314,6 +314,8 @@ export default class Main {
     // ── PC端适配：平台检测 ──
     const _sysInfo = wxRuntime?.getSystemInfoSync?.() || {};
     this.isPC = ['windows', 'mac', 'devtools'].includes(String(_sysInfo.platform || '').toLowerCase());
+    console.log('[PC适配] platform:', _sysInfo.platform, 'isPC:', this.isPC);
+    this.pcOffsetX = 0;
     this.buttons = [];
     this.toast = null;
     this.scene = 'home';
