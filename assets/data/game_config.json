@@ -1,0 +1,13 @@
+{
+  "showAdButtons": false,
+  "hideAdFeatures": true,
+  "visibleLevelMax": 180,
+  "hiddenCharacterSkins": [
+    "cat_lihua",
+    "turtle_green",
+    "panda_baby"
+  ],
+  "configsFolder": "assets/resources/configs",
+  "starRuleDefault": { "three": 0, "two": 2, "max": 5 },
+  "levelStarRules": {}
+}

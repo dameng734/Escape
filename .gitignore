@@ -1,0 +1,18 @@
+# 要屏蔽的工具目录
+.tools/
+.agents/
+.zig-global-cache/
+.zig-local-cache/
+
+# 系统、编辑器缓存
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 二进制程序兜底
+*.exe
+*.dll
+*.zip
+*.7z
+*.tar

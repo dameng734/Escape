@@ -1,0 +1,12 @@
+{
+  "name": "escape-degine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local level browser and editor for Escape.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,1608 @@
+{
+  "checked": 177,
+  "diversityGateVerified": true,
+  "exactOptimalVerified": true,
+  "independentTopologies": 177,
+  "range": [
+    4,
+    180
+  ],
+  "records": {
+    "10": {
+      "componentMaximumDistance": 23,
+      "componentStates": 44667,
+      "distanceMs": 92,
+      "emptyCells": 7,
+      "enumerationMs": 82,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 14
+    },
+    "100": {
+      "componentMaximumDistance": 38,
+      "componentStates": 124268,
+      "distanceMs": 263,
+      "emptyCells": 8,
+      "enumerationMs": 322,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 30
+    },
+    "101": {
+      "componentMaximumDistance": 37,
+      "componentStates": 258666,
+      "distanceMs": 831,
+      "emptyCells": 7,
+      "enumerationMs": 738,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "102": {
+      "componentMaximumDistance": 31,
+      "componentStates": 33044,
+      "distanceMs": 105,
+      "emptyCells": 8,
+      "enumerationMs": 101,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "103": {
+      "componentMaximumDistance": 34,
+      "componentStates": 14656,
+      "distanceMs": 30,
+      "emptyCells": 8,
+      "enumerationMs": 36,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "104": {
+      "componentMaximumDistance": 43,
+      "componentStates": 52952,
+      "distanceMs": 119,
+      "emptyCells": 8,
+      "enumerationMs": 117,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "105": {
+      "componentMaximumDistance": 31,
+      "componentStates": 29078,
+      "distanceMs": 52,
+      "emptyCells": 8,
+      "enumerationMs": 63,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 30
+    },
+    "106": {
+      "componentMaximumDistance": 36,
+      "componentStates": 16954,
+      "distanceMs": 29,
+      "emptyCells": 8,
+      "enumerationMs": 30,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 30
+    },
+    "107": {
+      "componentMaximumDistance": 32,
+      "componentStates": 79611,
+      "distanceMs": 198,
+      "emptyCells": 8,
+      "enumerationMs": 198,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 30
+    },
+    "108": {
+      "componentMaximumDistance": 42,
+      "componentStates": 7583,
+      "distanceMs": 11,
+      "emptyCells": 7,
+      "enumerationMs": 15,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "109": {
+      "componentMaximumDistance": 96,
+      "componentStates": 209522,
+      "distanceMs": 473,
+      "emptyCells": 8,
+      "enumerationMs": 514,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "11": {
+      "componentMaximumDistance": 15,
+      "componentStates": 7068,
+      "distanceMs": 13,
+      "emptyCells": 7,
+      "enumerationMs": 13,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 14
+    },
+    "110": {
+      "componentMaximumDistance": 35,
+      "componentStates": 6988,
+      "distanceMs": 9,
+      "emptyCells": 7,
+      "enumerationMs": 11,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "111": {
+      "componentMaximumDistance": 40,
+      "componentStates": 4125,
+      "distanceMs": 5,
+      "emptyCells": 8,
+      "enumerationMs": 7,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "112": {
+      "componentMaximumDistance": 31,
+      "componentStates": 88275,
+      "distanceMs": 174,
+      "emptyCells": 8,
+      "enumerationMs": 173,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "113": {
+      "componentMaximumDistance": 40,
+      "componentStates": 19071,
+      "distanceMs": 33,
+      "emptyCells": 8,
+      "enumerationMs": 35,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "114": {
+      "componentMaximumDistance": 33,
+      "componentStates": 4671,
+      "distanceMs": 8,
+      "emptyCells": 8,
+      "enumerationMs": 9,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "115": {
+      "componentMaximumDistance": 52,
+      "componentStates": 32310,
+      "distanceMs": 52,
+      "emptyCells": 6,
+      "enumerationMs": 50,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "116": {
+      "componentMaximumDistance": 34,
+      "componentStates": 14143,
+      "distanceMs": 19,
+      "emptyCells": 8,
+      "enumerationMs": 25,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "117": {
+      "componentMaximumDistance": 41,
+      "componentStates": 124388,
+      "distanceMs": 287,
+      "emptyCells": 8,
+      "enumerationMs": 255,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "118": {
+      "componentMaximumDistance": 30,
+      "componentStates": 302485,
+      "distanceMs": 745,
+      "emptyCells": 8,
+      "enumerationMs": 832,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "119": {
+      "componentMaximumDistance": 31,
+      "componentStates": 81385,
+      "distanceMs": 164,
+      "emptyCells": 7,
+      "enumerationMs": 183,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "12": {
+      "componentMaximumDistance": 17,
+      "componentStates": 1901,
+      "distanceMs": 2,
+      "emptyCells": 5,
+      "enumerationMs": 4,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 14
+    },
+    "120": {
+      "componentMaximumDistance": 36,
+      "componentStates": 30311,
+      "distanceMs": 77,
+      "emptyCells": 8,
+      "enumerationMs": 74,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "121": {
+      "componentMaximumDistance": 32,
+      "componentStates": 410469,
+      "distanceMs": 1061,
+      "emptyCells": 8,
+      "enumerationMs": 931,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "122": {
+      "componentMaximumDistance": 54,
+      "componentStates": 62752,
+      "distanceMs": 121,
+      "emptyCells": 8,
+      "enumerationMs": 132,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "123": {
+      "componentMaximumDistance": 33,
+      "componentStates": 5883,
+      "distanceMs": 9,
+      "emptyCells": 8,
+      "enumerationMs": 14,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "124": {
+      "componentMaximumDistance": 35,
+      "componentStates": 5196,
+      "distanceMs": 9,
+      "emptyCells": 7,
+      "enumerationMs": 11,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 30
+    },
+    "125": {
+      "componentMaximumDistance": 39,
+      "componentStates": 66625,
+      "distanceMs": 138,
+      "emptyCells": 7,
+      "enumerationMs": 141,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "126": {
+      "componentMaximumDistance": 43,
+      "componentStates": 261921,
+      "distanceMs": 652,
+      "emptyCells": 7,
+      "enumerationMs": 591,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "127": {
+      "componentMaximumDistance": 31,
+      "componentStates": 99291,
+      "distanceMs": 194,
+      "emptyCells": 8,
+      "enumerationMs": 226,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "128": {
+      "componentMaximumDistance": 30,
+      "componentStates": 3559,
+      "distanceMs": 4,
+      "emptyCells": 7,
+      "enumerationMs": 7,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "129": {
+      "componentMaximumDistance": 39,
+      "componentStates": 59525,
+      "distanceMs": 119,
+      "emptyCells": 8,
+      "enumerationMs": 132,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "13": {
+      "componentMaximumDistance": 18,
+      "componentStates": 11290,
+      "distanceMs": 22,
+      "emptyCells": 7,
+      "enumerationMs": 20,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 15
+    },
+    "130": {
+      "componentMaximumDistance": 39,
+      "componentStates": 246124,
+      "distanceMs": 577,
+      "emptyCells": 8,
+      "enumerationMs": 590,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "131": {
+      "componentMaximumDistance": 43,
+      "componentStates": 164085,
+      "distanceMs": 394,
+      "emptyCells": 8,
+      "enumerationMs": 391,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "132": {
+      "componentMaximumDistance": 34,
+      "componentStates": 98632,
+      "distanceMs": 205,
+      "emptyCells": 8,
+      "enumerationMs": 205,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "133": {
+      "componentMaximumDistance": 38,
+      "componentStates": 22648,
+      "distanceMs": 40,
+      "emptyCells": 8,
+      "enumerationMs": 43,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "134": {
+      "componentMaximumDistance": 44,
+      "componentStates": 72932,
+      "distanceMs": 147,
+      "emptyCells": 8,
+      "enumerationMs": 140,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "135": {
+      "componentMaximumDistance": 37,
+      "componentStates": 2622,
+      "distanceMs": 5,
+      "emptyCells": 5,
+      "enumerationMs": 6,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "136": {
+      "componentMaximumDistance": 39,
+      "componentStates": 3631,
+      "distanceMs": 8,
+      "emptyCells": 7,
+      "enumerationMs": 7,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "137": {
+      "componentMaximumDistance": 31,
+      "componentStates": 54199,
+      "distanceMs": 123,
+      "emptyCells": 7,
+      "enumerationMs": 137,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "138": {
+      "componentMaximumDistance": 31,
+      "componentStates": 129576,
+      "distanceMs": 295,
+      "emptyCells": 8,
+      "enumerationMs": 308,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "139": {
+      "componentMaximumDistance": 40,
+      "componentStates": 276609,
+      "distanceMs": 703,
+      "emptyCells": 8,
+      "enumerationMs": 638,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "14": {
+      "componentMaximumDistance": 16,
+      "componentStates": 108555,
+      "distanceMs": 235,
+      "emptyCells": 8,
+      "enumerationMs": 235,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 15
+    },
+    "140": {
+      "componentMaximumDistance": 36,
+      "componentStates": 8149,
+      "distanceMs": 13,
+      "emptyCells": 7,
+      "enumerationMs": 18,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 30
+    },
+    "141": {
+      "componentMaximumDistance": 35,
+      "componentStates": 1680,
+      "distanceMs": 2,
+      "emptyCells": 8,
+      "enumerationMs": 4,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "142": {
+      "componentMaximumDistance": 52,
+      "componentStates": 148861,
+      "distanceMs": 336,
+      "emptyCells": 8,
+      "enumerationMs": 334,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "143": {
+      "componentMaximumDistance": 44,
+      "componentStates": 27005,
+      "distanceMs": 42,
+      "emptyCells": 8,
+      "enumerationMs": 43,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "144": {
+      "componentMaximumDistance": 44,
+      "componentStates": 85680,
+      "distanceMs": 165,
+      "emptyCells": 8,
+      "enumerationMs": 163,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "145": {
+      "componentMaximumDistance": 34,
+      "componentStates": 201483,
+      "distanceMs": 500,
+      "emptyCells": 8,
+      "enumerationMs": 447,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "146": {
+      "componentMaximumDistance": 32,
+      "componentStates": 24324,
+      "distanceMs": 59,
+      "emptyCells": 6,
+      "enumerationMs": 52,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "147": {
+      "componentMaximumDistance": 31,
+      "componentStates": 33208,
+      "distanceMs": 65,
+      "emptyCells": 6,
+      "enumerationMs": 61,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "148": {
+      "componentMaximumDistance": 30,
+      "componentStates": 358447,
+      "distanceMs": 881,
+      "emptyCells": 8,
+      "enumerationMs": 792,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "149": {
+      "componentMaximumDistance": 84,
+      "componentStates": 538575,
+      "distanceMs": 1355,
+      "emptyCells": 8,
+      "enumerationMs": 1254,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "15": {
+      "componentMaximumDistance": 19,
+      "componentStates": 4768,
+      "distanceMs": 10,
+      "emptyCells": 6,
+      "enumerationMs": 11,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 15
+    },
+    "150": {
+      "componentMaximumDistance": 47,
+      "componentStates": 40536,
+      "distanceMs": 72,
+      "emptyCells": 7,
+      "enumerationMs": 71,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "151": {
+      "componentMaximumDistance": 37,
+      "componentStates": 231284,
+      "distanceMs": 513,
+      "emptyCells": 8,
+      "enumerationMs": 598,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "152": {
+      "componentMaximumDistance": 71,
+      "componentStates": 742050,
+      "distanceMs": 1817,
+      "emptyCells": 8,
+      "enumerationMs": 1640,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "153": {
+      "componentMaximumDistance": 50,
+      "componentStates": 582681,
+      "distanceMs": 1630,
+      "emptyCells": 8,
+      "enumerationMs": 1440,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "154": {
+      "componentMaximumDistance": 44,
+      "componentStates": 264858,
+      "distanceMs": 582,
+      "emptyCells": 8,
+      "enumerationMs": 549,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "155": {
+      "componentMaximumDistance": 40,
+      "componentStates": 4578,
+      "distanceMs": 6,
+      "emptyCells": 7,
+      "enumerationMs": 10,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "156": {
+      "componentMaximumDistance": 36,
+      "componentStates": 18381,
+      "distanceMs": 38,
+      "emptyCells": 8,
+      "enumerationMs": 40,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "157": {
+      "componentMaximumDistance": 32,
+      "componentStates": 110615,
+      "distanceMs": 246,
+      "emptyCells": 8,
+      "enumerationMs": 240,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "158": {
+      "componentMaximumDistance": 48,
+      "componentStates": 129445,
+      "distanceMs": 247,
+      "emptyCells": 7,
+      "enumerationMs": 236,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "159": {
+      "componentMaximumDistance": 35,
+      "componentStates": 8416,
+      "distanceMs": 10,
+      "emptyCells": 8,
+      "enumerationMs": 12,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "16": {
+      "componentMaximumDistance": 18,
+      "componentStates": 8426,
+      "distanceMs": 16,
+      "emptyCells": 8,
+      "enumerationMs": 16,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 16
+    },
+    "160": {
+      "componentMaximumDistance": 37,
+      "componentStates": 3927,
+      "distanceMs": 7,
+      "emptyCells": 8,
+      "enumerationMs": 12,
+      "fixedBlocks": 6,
+      "trueOptimalSteps": 30
+    },
+    "161": {
+      "componentMaximumDistance": 65,
+      "componentStates": 348169,
+      "distanceMs": 877,
+      "emptyCells": 7,
+      "enumerationMs": 862,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "162": {
+      "componentMaximumDistance": 34,
+      "componentStates": 75903,
+      "distanceMs": 221,
+      "emptyCells": 8,
+      "enumerationMs": 215,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "163": {
+      "componentMaximumDistance": 47,
+      "componentStates": 41410,
+      "distanceMs": 98,
+      "emptyCells": 8,
+      "enumerationMs": 92,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "164": {
+      "componentMaximumDistance": 33,
+      "componentStates": 65175,
+      "distanceMs": 168,
+      "emptyCells": 8,
+      "enumerationMs": 170,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "165": {
+      "componentMaximumDistance": 32,
+      "componentStates": 65618,
+      "distanceMs": 182,
+      "emptyCells": 8,
+      "enumerationMs": 166,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "166": {
+      "componentMaximumDistance": 39,
+      "componentStates": 37079,
+      "distanceMs": 110,
+      "emptyCells": 7,
+      "enumerationMs": 96,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "167": {
+      "componentMaximumDistance": 37,
+      "componentStates": 37053,
+      "distanceMs": 86,
+      "emptyCells": 8,
+      "enumerationMs": 93,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "168": {
+      "componentMaximumDistance": 36,
+      "componentStates": 7608,
+      "distanceMs": 20,
+      "emptyCells": 6,
+      "enumerationMs": 21,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "169": {
+      "componentMaximumDistance": 32,
+      "componentStates": 63730,
+      "distanceMs": 162,
+      "emptyCells": 8,
+      "enumerationMs": 178,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "17": {
+      "componentMaximumDistance": 28,
+      "componentStates": 28694,
+      "distanceMs": 61,
+      "emptyCells": 8,
+      "enumerationMs": 51,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 16
+    },
+    "170": {
+      "componentMaximumDistance": 39,
+      "componentStates": 29545,
+      "distanceMs": 77,
+      "emptyCells": 8,
+      "enumerationMs": 74,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "171": {
+      "componentMaximumDistance": 49,
+      "componentStates": 75960,
+      "distanceMs": 163,
+      "emptyCells": 8,
+      "enumerationMs": 206,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "172": {
+      "componentMaximumDistance": 31,
+      "componentStates": 60900,
+      "distanceMs": 151,
+      "emptyCells": 8,
+      "enumerationMs": 139,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "173": {
+      "componentMaximumDistance": 37,
+      "componentStates": 74192,
+      "distanceMs": 181,
+      "emptyCells": 8,
+      "enumerationMs": 180,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "174": {
+      "componentMaximumDistance": 35,
+      "componentStates": 19890,
+      "distanceMs": 39,
+      "emptyCells": 7,
+      "enumerationMs": 42,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "175": {
+      "componentMaximumDistance": 33,
+      "componentStates": 35069,
+      "distanceMs": 61,
+      "emptyCells": 7,
+      "enumerationMs": 61,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "176": {
+      "componentMaximumDistance": 32,
+      "componentStates": 6401,
+      "distanceMs": 8,
+      "emptyCells": 7,
+      "enumerationMs": 11,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "177": {
+      "componentMaximumDistance": 50,
+      "componentStates": 422080,
+      "distanceMs": 1055,
+      "emptyCells": 8,
+      "enumerationMs": 961,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "178": {
+      "componentMaximumDistance": 30,
+      "componentStates": 156117,
+      "distanceMs": 424,
+      "emptyCells": 8,
+      "enumerationMs": 354,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "179": {
+      "componentMaximumDistance": 37,
+      "componentStates": 247829,
+      "distanceMs": 521,
+      "emptyCells": 7,
+      "enumerationMs": 621,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "18": {
+      "componentMaximumDistance": 46,
+      "componentStates": 58583,
+      "distanceMs": 118,
+      "emptyCells": 7,
+      "enumerationMs": 123,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 16
+    },
+    "180": {
+      "componentMaximumDistance": 32,
+      "componentStates": 96944,
+      "distanceMs": 196,
+      "emptyCells": 8,
+      "enumerationMs": 182,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "19": {
+      "componentMaximumDistance": 17,
+      "componentStates": 3221,
+      "distanceMs": 5,
+      "emptyCells": 8,
+      "enumerationMs": 7,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 17
+    },
+    "20": {
+      "componentMaximumDistance": 18,
+      "componentStates": 34843,
+      "distanceMs": 73,
+      "emptyCells": 8,
+      "enumerationMs": 71,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 17
+    },
+    "21": {
+      "componentMaximumDistance": 17,
+      "componentStates": 8540,
+      "distanceMs": 15,
+      "emptyCells": 7,
+      "enumerationMs": 15,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 17
+    },
+    "22": {
+      "componentMaximumDistance": 21,
+      "componentStates": 23169,
+      "distanceMs": 45,
+      "emptyCells": 8,
+      "enumerationMs": 45,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 18
+    },
+    "23": {
+      "componentMaximumDistance": 18,
+      "componentStates": 38600,
+      "distanceMs": 87,
+      "emptyCells": 8,
+      "enumerationMs": 79,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 18
+    },
+    "24": {
+      "componentMaximumDistance": 34,
+      "componentStates": 4415,
+      "distanceMs": 6,
+      "emptyCells": 8,
+      "enumerationMs": 9,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 18
+    },
+    "25": {
+      "componentMaximumDistance": 19,
+      "componentStates": 27594,
+      "distanceMs": 63,
+      "emptyCells": 8,
+      "enumerationMs": 57,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 19
+    },
+    "26": {
+      "componentMaximumDistance": 24,
+      "componentStates": 67702,
+      "distanceMs": 149,
+      "emptyCells": 8,
+      "enumerationMs": 167,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 19
+    },
+    "27": {
+      "componentMaximumDistance": 22,
+      "componentStates": 8457,
+      "distanceMs": 11,
+      "emptyCells": 6,
+      "enumerationMs": 14,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 19
+    },
+    "28": {
+      "componentMaximumDistance": 22,
+      "componentStates": 8605,
+      "distanceMs": 12,
+      "emptyCells": 8,
+      "enumerationMs": 14,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 20
+    },
+    "29": {
+      "componentMaximumDistance": 25,
+      "componentStates": 54161,
+      "distanceMs": 144,
+      "emptyCells": 8,
+      "enumerationMs": 117,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 20
+    },
+    "30": {
+      "componentMaximumDistance": 36,
+      "componentStates": 4078,
+      "distanceMs": 7,
+      "emptyCells": 5,
+      "enumerationMs": 9,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 20
+    },
+    "31": {
+      "componentMaximumDistance": 42,
+      "componentStates": 180189,
+      "distanceMs": 339,
+      "emptyCells": 8,
+      "enumerationMs": 344,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 21
+    },
+    "32": {
+      "componentMaximumDistance": 24,
+      "componentStates": 6324,
+      "distanceMs": 9,
+      "emptyCells": 8,
+      "enumerationMs": 12,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 21
+    },
+    "33": {
+      "componentMaximumDistance": 23,
+      "componentStates": 45447,
+      "distanceMs": 84,
+      "emptyCells": 8,
+      "enumerationMs": 85,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 21
+    },
+    "34": {
+      "componentMaximumDistance": 26,
+      "componentStates": 9069,
+      "distanceMs": 12,
+      "emptyCells": 7,
+      "enumerationMs": 14,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 22
+    },
+    "35": {
+      "componentMaximumDistance": 33,
+      "componentStates": 21277,
+      "distanceMs": 32,
+      "emptyCells": 8,
+      "enumerationMs": 34,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 22
+    },
+    "36": {
+      "componentMaximumDistance": 33,
+      "componentStates": 24503,
+      "distanceMs": 45,
+      "emptyCells": 8,
+      "enumerationMs": 41,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 22
+    },
+    "37": {
+      "componentMaximumDistance": 26,
+      "componentStates": 5297,
+      "distanceMs": 6,
+      "emptyCells": 8,
+      "enumerationMs": 11,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 23
+    },
+    "38": {
+      "componentMaximumDistance": 24,
+      "componentStates": 80238,
+      "distanceMs": 164,
+      "emptyCells": 8,
+      "enumerationMs": 147,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 23
+    },
+    "39": {
+      "componentMaximumDistance": 27,
+      "componentStates": 207666,
+      "distanceMs": 606,
+      "emptyCells": 8,
+      "enumerationMs": 540,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 23
+    },
+    "4": {
+      "componentMaximumDistance": 13,
+      "componentStates": 1998,
+      "distanceMs": 3,
+      "emptyCells": 5,
+      "enumerationMs": 4,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 12
+    },
+    "40": {
+      "componentMaximumDistance": 28,
+      "componentStates": 54148,
+      "distanceMs": 104,
+      "emptyCells": 8,
+      "enumerationMs": 103,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 24
+    },
+    "41": {
+      "componentMaximumDistance": 25,
+      "componentStates": 31428,
+      "distanceMs": 56,
+      "emptyCells": 8,
+      "enumerationMs": 51,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 24
+    },
+    "42": {
+      "componentMaximumDistance": 24,
+      "componentStates": 40915,
+      "distanceMs": 99,
+      "emptyCells": 8,
+      "enumerationMs": 91,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 24
+    },
+    "43": {
+      "componentMaximumDistance": 28,
+      "componentStates": 7301,
+      "distanceMs": 13,
+      "emptyCells": 8,
+      "enumerationMs": 13,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 25
+    },
+    "44": {
+      "componentMaximumDistance": 33,
+      "componentStates": 3528,
+      "distanceMs": 5,
+      "emptyCells": 8,
+      "enumerationMs": 8,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 25
+    },
+    "45": {
+      "componentMaximumDistance": 26,
+      "componentStates": 2444,
+      "distanceMs": 3,
+      "emptyCells": 6,
+      "enumerationMs": 6,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 25
+    },
+    "46": {
+      "componentMaximumDistance": 36,
+      "componentStates": 42776,
+      "distanceMs": 86,
+      "emptyCells": 8,
+      "enumerationMs": 90,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 26
+    },
+    "47": {
+      "componentMaximumDistance": 26,
+      "componentStates": 14459,
+      "distanceMs": 29,
+      "emptyCells": 8,
+      "enumerationMs": 29,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 26
+    },
+    "48": {
+      "componentMaximumDistance": 28,
+      "componentStates": 6867,
+      "distanceMs": 12,
+      "emptyCells": 8,
+      "enumerationMs": 14,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 26
+    },
+    "49": {
+      "componentMaximumDistance": 30,
+      "componentStates": 19084,
+      "distanceMs": 41,
+      "emptyCells": 6,
+      "enumerationMs": 42,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 27
+    },
+    "5": {
+      "componentMaximumDistance": 15,
+      "componentStates": 77168,
+      "distanceMs": 169,
+      "emptyCells": 8,
+      "enumerationMs": 187,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 12
+    },
+    "50": {
+      "componentMaximumDistance": 34,
+      "componentStates": 8815,
+      "distanceMs": 14,
+      "emptyCells": 8,
+      "enumerationMs": 18,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 27
+    },
+    "51": {
+      "componentMaximumDistance": 31,
+      "componentStates": 79879,
+      "distanceMs": 169,
+      "emptyCells": 8,
+      "enumerationMs": 175,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 27
+    },
+    "52": {
+      "componentMaximumDistance": 33,
+      "componentStates": 14270,
+      "distanceMs": 21,
+      "emptyCells": 7,
+      "enumerationMs": 25,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 28
+    },
+    "53": {
+      "componentMaximumDistance": 41,
+      "componentStates": 52932,
+      "distanceMs": 104,
+      "emptyCells": 8,
+      "enumerationMs": 92,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 28
+    },
+    "54": {
+      "componentMaximumDistance": 32,
+      "componentStates": 22278,
+      "distanceMs": 37,
+      "emptyCells": 7,
+      "enumerationMs": 38,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 28
+    },
+    "55": {
+      "componentMaximumDistance": 29,
+      "componentStates": 5286,
+      "distanceMs": 8,
+      "emptyCells": 7,
+      "enumerationMs": 11,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 29
+    },
+    "56": {
+      "componentMaximumDistance": 37,
+      "componentStates": 27850,
+      "distanceMs": 54,
+      "emptyCells": 8,
+      "enumerationMs": 46,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 29
+    },
+    "57": {
+      "componentMaximumDistance": 34,
+      "componentStates": 47733,
+      "distanceMs": 77,
+      "emptyCells": 7,
+      "enumerationMs": 79,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 29
+    },
+    "58": {
+      "componentMaximumDistance": 57,
+      "componentStates": 47670,
+      "distanceMs": 83,
+      "emptyCells": 7,
+      "enumerationMs": 91,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "59": {
+      "componentMaximumDistance": 30,
+      "componentStates": 18563,
+      "distanceMs": 30,
+      "emptyCells": 6,
+      "enumerationMs": 30,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "6": {
+      "componentMaximumDistance": 14,
+      "componentStates": 3314,
+      "distanceMs": 8,
+      "emptyCells": 8,
+      "enumerationMs": 7,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 12
+    },
+    "60": {
+      "componentMaximumDistance": 35,
+      "componentStates": 5050,
+      "distanceMs": 7,
+      "emptyCells": 8,
+      "enumerationMs": 9,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "61": {
+      "componentMaximumDistance": 31,
+      "componentStates": 104812,
+      "distanceMs": 259,
+      "emptyCells": 8,
+      "enumerationMs": 230,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "62": {
+      "componentMaximumDistance": 33,
+      "componentStates": 65550,
+      "distanceMs": 133,
+      "emptyCells": 7,
+      "enumerationMs": 147,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "63": {
+      "componentMaximumDistance": 33,
+      "componentStates": 54311,
+      "distanceMs": 107,
+      "emptyCells": 7,
+      "enumerationMs": 108,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "64": {
+      "componentMaximumDistance": 36,
+      "componentStates": 92804,
+      "distanceMs": 190,
+      "emptyCells": 8,
+      "enumerationMs": 192,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "65": {
+      "componentMaximumDistance": 34,
+      "componentStates": 91879,
+      "distanceMs": 175,
+      "emptyCells": 8,
+      "enumerationMs": 185,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "66": {
+      "componentMaximumDistance": 30,
+      "componentStates": 117211,
+      "distanceMs": 295,
+      "emptyCells": 8,
+      "enumerationMs": 294,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "67": {
+      "componentMaximumDistance": 47,
+      "componentStates": 121286,
+      "distanceMs": 308,
+      "emptyCells": 8,
+      "enumerationMs": 324,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "68": {
+      "componentMaximumDistance": 52,
+      "componentStates": 187541,
+      "distanceMs": 434,
+      "emptyCells": 8,
+      "enumerationMs": 442,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "69": {
+      "componentMaximumDistance": 37,
+      "componentStates": 4526,
+      "distanceMs": 5,
+      "emptyCells": 6,
+      "enumerationMs": 8,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "7": {
+      "componentMaximumDistance": 16,
+      "componentStates": 17741,
+      "distanceMs": 33,
+      "emptyCells": 8,
+      "enumerationMs": 43,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 13
+    },
+    "70": {
+      "componentMaximumDistance": 37,
+      "componentStates": 232566,
+      "distanceMs": 668,
+      "emptyCells": 8,
+      "enumerationMs": 604,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "71": {
+      "componentMaximumDistance": 38,
+      "componentStates": 53206,
+      "distanceMs": 106,
+      "emptyCells": 8,
+      "enumerationMs": 108,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "72": {
+      "componentMaximumDistance": 67,
+      "componentStates": 887341,
+      "distanceMs": 2495,
+      "emptyCells": 8,
+      "enumerationMs": 2420,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "73": {
+      "componentMaximumDistance": 50,
+      "componentStates": 65048,
+      "distanceMs": 137,
+      "emptyCells": 7,
+      "enumerationMs": 148,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "74": {
+      "componentMaximumDistance": 31,
+      "componentStates": 37640,
+      "distanceMs": 77,
+      "emptyCells": 7,
+      "enumerationMs": 77,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "75": {
+      "componentMaximumDistance": 68,
+      "componentStates": 132484,
+      "distanceMs": 246,
+      "emptyCells": 8,
+      "enumerationMs": 275,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "76": {
+      "componentMaximumDistance": 54,
+      "componentStates": 409850,
+      "distanceMs": 931,
+      "emptyCells": 8,
+      "enumerationMs": 1013,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "77": {
+      "componentMaximumDistance": 44,
+      "componentStates": 343122,
+      "distanceMs": 902,
+      "emptyCells": 8,
+      "enumerationMs": 881,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "78": {
+      "componentMaximumDistance": 33,
+      "componentStates": 32320,
+      "distanceMs": 65,
+      "emptyCells": 8,
+      "enumerationMs": 79,
+      "fixedBlocks": 3,
+      "trueOptimalSteps": 30
+    },
+    "79": {
+      "componentMaximumDistance": 31,
+      "componentStates": 46937,
+      "distanceMs": 122,
+      "emptyCells": 7,
+      "enumerationMs": 95,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "8": {
+      "componentMaximumDistance": 21,
+      "componentStates": 36217,
+      "distanceMs": 84,
+      "emptyCells": 8,
+      "enumerationMs": 83,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 13
+    },
+    "80": {
+      "componentMaximumDistance": 56,
+      "componentStates": 26168,
+      "distanceMs": 57,
+      "emptyCells": 7,
+      "enumerationMs": 64,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "81": {
+      "componentMaximumDistance": 35,
+      "componentStates": 45440,
+      "distanceMs": 108,
+      "emptyCells": 8,
+      "enumerationMs": 100,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "82": {
+      "componentMaximumDistance": 45,
+      "componentStates": 4094,
+      "distanceMs": 6,
+      "emptyCells": 6,
+      "enumerationMs": 9,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "83": {
+      "componentMaximumDistance": 40,
+      "componentStates": 77937,
+      "distanceMs": 158,
+      "emptyCells": 7,
+      "enumerationMs": 170,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "84": {
+      "componentMaximumDistance": 31,
+      "componentStates": 89958,
+      "distanceMs": 170,
+      "emptyCells": 8,
+      "enumerationMs": 163,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "85": {
+      "componentMaximumDistance": 36,
+      "componentStates": 15908,
+      "distanceMs": 29,
+      "emptyCells": 8,
+      "enumerationMs": 31,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "86": {
+      "componentMaximumDistance": 30,
+      "componentStates": 28900,
+      "distanceMs": 57,
+      "emptyCells": 7,
+      "enumerationMs": 58,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "87": {
+      "componentMaximumDistance": 32,
+      "componentStates": 70287,
+      "distanceMs": 144,
+      "emptyCells": 8,
+      "enumerationMs": 154,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "88": {
+      "componentMaximumDistance": 32,
+      "componentStates": 136840,
+      "distanceMs": 304,
+      "emptyCells": 8,
+      "enumerationMs": 277,
+      "fixedBlocks": 2,
+      "trueOptimalSteps": 30
+    },
+    "89": {
+      "componentMaximumDistance": 36,
+      "componentStates": 13565,
+      "distanceMs": 22,
+      "emptyCells": 7,
+      "enumerationMs": 24,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "9": {
+      "componentMaximumDistance": 22,
+      "componentStates": 176774,
+      "distanceMs": 392,
+      "emptyCells": 8,
+      "enumerationMs": 404,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 13
+    },
+    "90": {
+      "componentMaximumDistance": 68,
+      "componentStates": 21883,
+      "distanceMs": 41,
+      "emptyCells": 8,
+      "enumerationMs": 35,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    },
+    "91": {
+      "componentMaximumDistance": 44,
+      "componentStates": 92333,
+      "distanceMs": 240,
+      "emptyCells": 7,
+      "enumerationMs": 217,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "92": {
+      "componentMaximumDistance": 45,
+      "componentStates": 95914,
+      "distanceMs": 207,
+      "emptyCells": 8,
+      "enumerationMs": 216,
+      "fixedBlocks": 4,
+      "trueOptimalSteps": 30
+    },
+    "93": {
+      "componentMaximumDistance": 34,
+      "componentStates": 223830,
+      "distanceMs": 596,
+      "emptyCells": 8,
+      "enumerationMs": 531,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "94": {
+      "componentMaximumDistance": 40,
+      "componentStates": 237489,
+      "distanceMs": 546,
+      "emptyCells": 8,
+      "enumerationMs": 544,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "95": {
+      "componentMaximumDistance": 65,
+      "componentStates": 693405,
+      "distanceMs": 1759,
+      "emptyCells": 8,
+      "enumerationMs": 1654,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "96": {
+      "componentMaximumDistance": 31,
+      "componentStates": 15894,
+      "distanceMs": 25,
+      "emptyCells": 8,
+      "enumerationMs": 27,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "97": {
+      "componentMaximumDistance": 47,
+      "componentStates": 106069,
+      "distanceMs": 233,
+      "emptyCells": 8,
+      "enumerationMs": 249,
+      "fixedBlocks": 5,
+      "trueOptimalSteps": 30
+    },
+    "98": {
+      "componentMaximumDistance": 39,
+      "componentStates": 192391,
+      "distanceMs": 476,
+      "emptyCells": 8,
+      "enumerationMs": 422,
+      "fixedBlocks": 0,
+      "trueOptimalSteps": 30
+    },
+    "99": {
+      "componentMaximumDistance": 30,
+      "componentStates": 62235,
+      "distanceMs": 125,
+      "emptyCells": 8,
+      "enumerationMs": 145,
+      "fixedBlocks": 1,
+      "trueOptimalSteps": 30
+    }
+  },
+  "symmetryExpansionUsed": false,
+  "templateExpansionUsed": false,
+  "valid": true
+}

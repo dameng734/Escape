@@ -1,0 +1,83 @@
+{
+  "shop": {
+    "adCoins": {
+      "coinsPerAd": 80,
+      "dailyLimit": 10,
+      "totalLimit": 0
+    }
+  },
+  "itemPrices": {
+    "hintTicket": 100,
+    "undoTicket": 80,
+    "addStepTicket": 150,
+    "skipTicket": 300
+  },
+  "characterSkinPrices": {
+    "cat_orange": 1800,
+    "cat_lihua": 1800,
+    "dog_tan": 1800,
+    "rabbit_white": 1800,
+    "turtle_green": 1800,
+    "panda_baby": 1800
+  },
+  "characterSkinUnlocks": {
+    "cat_orange": {
+      "coins": 1800,
+      "ads": 0
+    },
+    "cat_lihua": {
+      "coins": 1800,
+      "ads": 5
+    },
+    "dog_tan": {
+      "coins": 1800,
+      "ads": 8
+    },
+    "rabbit_white": {
+      "coins": 1800,
+      "ads": 8
+    },
+    "turtle_green": {
+      "coins": 1800,
+      "ads": 8
+    },
+    "panda_baby": {
+      "coins": 1800,
+      "ads": 10
+    }
+  },
+  "themePrices": {
+    "theme_default": 1800,
+    "theme_classic": 1800,
+    "theme_neon": 1800,
+    "theme_pastel": 1800,
+    "theme_pixel": 1800,
+    "theme_mono": 1800
+  },
+  "themeUnlocks": {
+    "theme_default": {
+      "coins": 1800,
+      "ads": 0
+    },
+    "theme_classic": {
+      "coins": 1800,
+      "ads": 5
+    },
+    "theme_neon": {
+      "coins": 1800,
+      "ads": 6
+    },
+    "theme_pastel": {
+      "coins": 1800,
+      "ads": 6
+    },
+    "theme_pixel": {
+      "coins": 1800,
+      "ads": 8
+    },
+    "theme_mono": {
+      "coins": 1800,
+      "ads": 8
+    }
+  }
+}

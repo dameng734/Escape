@@ -1,0 +1,67 @@
+{
+  "description": "Let Him Out native WeChat mini game",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": false,
+    "enhance": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "disableUseStrict": false,
+    "useCompilerPlugins": false
+  },
+  "compileType": "game",
+  "libVersion": "latest",
+  "appid": "wx47991700dca24073",
+  "projectname": "let-him-out-native",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "condition": {
+    "search": { "current": -1, "list": [] },
+    "conversation": { "current": -1, "list": [] },
+    "game": { "currentL": -1, "list": [] },
+    "miniprogram": { "current": -1, "list": [] }
+  },
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [
+      { "type": "file", "value": "assets/data/levels.json" },
+      { "type": "file", "value": "assets/data/independent_levels_report.json" },
+      { "type": "file", "value": "assets/data/independent_validation_report.json" },
+      { "type": "file", "value": "assets/data/independent_level_checkpoint.json" },
+      { "type": "file", "value": "assets/images/theme_neon_bg.png" },
+      { "type": "file", "value": "assets/images/theme_classic_bg.png" },
+      { "type": "file", "value": "assets/images/theme_pixel_bg.png" },
+      { "type": "file", "value": "BASIC_LEVEL_GENERATOR.md" },
+      { "type": "file", "value": "code.fortify.config.json" },
+      { "type": "folder", "value": "tools" },
+      { "type": "folder", "value": ".tools" },
+      { "type": "folder", "value": ".agents" },
+      { "type": "folder", "value": ".git" },
+      { "type": "folder", "value": "tmp" },
+      { "type": "folder", "value": "cloudfunctions" },
+      { "type": "folder", "value": ".zig-global-cache" },
+      { "type": "folder", "value": ".zig-local-cache" },
+      { "type": "folder", "value": ".zig-cache" }
+    ],
+    "include": []
+  },
+  "isGameTourist": false,
+  "editorSetting": {},
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
+}

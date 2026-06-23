@@ -1,0 +1,50 @@
+{
+  "enabled": true,
+  "simulateWhenUnavailable": false,
+  "adUnitId": "",
+  "preloadOnStart": true,
+  "interstitial": {
+    "enabled": true,
+    "adUnitId": "adunit-4fdf72380317f019",
+    "firstLevel": 10
+  },
+  "custom": {
+    "enabled": true,
+    "adUnitId": "adunit-95ef83f8526185ef",
+    "height": 104,
+    "bottom": 8
+  },
+  "rewards": {
+    "hint": {
+      "enabled": true,
+      "adUnitId": "adunit-3982861b15085a31",
+      "freeUses": 2,
+      "maxUsesPerLevel": 3
+    },
+    "addSteps": {
+      "enabled": true,
+      "adUnitId": "adunit-a62e96457118595a",
+      "steps": 6
+    },
+    "coinDouble": {
+      "enabled": true,
+      "adUnitId": "adunit-f828e5a7ba5aae25"
+    },
+    "shopCoins": {
+      "enabled": true,
+      "adUnitId": "",
+      "coins": 80,
+      "dailyLimit": 10,
+      "totalLimit": 0
+    },
+    "skinProgress": {
+      "enabled": true,
+      "adUnitId": "",
+      "progress": 1
+    },
+    "undo": {
+      "enabled": true,
+      "adUnitId": ""
+    }
+  }
+}

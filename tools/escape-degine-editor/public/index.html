@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Escape 关卡编辑器</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div>
+          <h1>Escape 关卡编辑器</h1>
+          <p id="pathText">正在读取关卡...</p>
+        </div>
+        <div class="actions">
+          <button id="playBtn" class="primary" type="button">游玩模式</button>
+          <button id="editBtn" type="button">编辑模式</button>
+          <button id="saveBtn" class="save" type="button">保存</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <aside class="levelPanel">
+          <div class="panelHeader">
+            <strong>关卡</strong>
+            <input id="levelSearch" type="search" placeholder="搜索编号">
+          </div>
+          <div id="levelList" class="levelList"></div>
+        </aside>
+
+        <section class="workspace">
+          <div class="stageHeader">
+            <div>
+              <h2 id="levelTitle">未选择关卡</h2>
+              <p id="levelMeta"></p>
+            </div>
+            <div id="statusPill" class="statusPill">游玩模式</div>
+          </div>
+          <div id="boardWrap" class="boardWrap">
+            <div id="board" class="board"></div>
+          </div>
+          <div class="playStats">
+            <span id="stepText">步数 0</span>
+            <span id="coinText">金币 0</span>
+            <span id="messageText"></span>
+          </div>
+        </section>
+
+        <aside class="toolPanel">
+          <div class="toolSection">
+            <strong>组件</strong>
+            <div id="palette" class="palette"></div>
+          </div>
+          <div class="toolSection">
+            <strong>属性</strong>
+            <div id="inspector" class="inspector"></div>
+          </div>
+        </aside>
+      </main>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>
