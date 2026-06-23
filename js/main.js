@@ -402,15 +402,21 @@ export default class Main {
   resize() {
     const info = safeWindowInfo();
     this.dpr = info.pixelRatio || 1;
-    this.width = info.windowWidth || info.screenWidth || 375;
-    this.height = info.windowHeight || info.screenHeight || 667;
-    // ── PC端适配：无安全区 ──
+    const realWidth = info.windowWidth || info.screenWidth || 375;
+    const realHeight = info.windowHeight || info.screenHeight || 667;
+    // ── PC端适配：限制游戏区域宽度，居中显示 ──
     if (this.isPC) {
+      this.width = Math.min(realWidth, 480);
+      this.height = realHeight;
       this.safeTop = 0;
       this.safeBottom = this.height;
+      this.pcOffsetX = Math.floor((realWidth - this.width) / 2);
     } else {
+      this.width = realWidth;
+      this.height = realHeight;
       this.safeTop = info.safeArea?.top || 0;
       this.safeBottom = info.safeArea?.bottom || this.height;
+      this.pcOffsetX = 0;
     }
     this.menuButton = wxRuntime?.getMenuButtonBoundingClientRect ? wxRuntime.getMenuButtonBoundingClientRect() : null;
     this.canvas.width = Math.floor(this.width * this.dpr);
@@ -1318,7 +1324,18 @@ export default class Main {
 
   render() {
     this.buttons = [];
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    // ── PC端适配：全屏清空，游戏区域居中偏移 ──
+    if (this.isPC && this.pcOffsetX) {
+      this.ctx.clearRect(0, 0, this.width + this.pcOffsetX * 2, this.height);
+      // 两侧留白
+      this.ctx.fillStyle = '#f0f4f8';
+      this.ctx.fillRect(0, 0, this.pcOffsetX, this.height);
+      this.ctx.fillRect(this.pcOffsetX + this.width, 0, this.pcOffsetX, this.height);
+      this.ctx.save();
+      this.ctx.translate(this.pcOffsetX, 0);
+    } else {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+    }
     if (this.scene === 'home') this.renderHome();
     if (this.scene === 'menu') this.renderMenu();
     if (this.scene === 'game') {
@@ -1326,6 +1343,9 @@ export default class Main {
       this.renderGame();
     }
     this.renderToast();
+    if (this.isPC && this.pcOffsetX) {
+      this.ctx.restore();
+    }
   }
 
   renderLoading() {
@@ -4409,7 +4429,9 @@ export default class Main {
 
   touchPoint(event) {
     const touch = event.changedTouches?.[0] || event.touches?.[0] || { clientX: 0, clientY: 0 };
-    return { x: touch.clientX, y: touch.clientY };
+    // ── PC端适配：触摸坐标减去居中偏移 ──
+    const offsetX = this.isPC ? (this.pcOffsetX || 0) : 0;
+    return { x: touch.clientX - offsetX, y: touch.clientY };
   }
 
   getMoveRange(block, axis) {
