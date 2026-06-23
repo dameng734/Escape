@@ -416,7 +416,8 @@ export default class Main {
       this.safeTop = 0;
       this.safeBottom = this.height;
       this.pcOffsetX = Math.floor((realWidth - this.width) / 2);
-      wx.showToast({ title: 'W:' + realWidth + '->' + this.width + ' OX:' + this.pcOffsetX, icon: 'none', duration: 5000 });
+      const _si = wx.getSystemInfoSync();
+      wx.showToast({ title: 'W:' + realWidth + ' H:' + realHeight + ' DPR:' + this.dpr, icon: 'none', duration: 5000 });
     } else {
       this.width = realWidth;
       this.height = realHeight;
