@@ -316,9 +316,7 @@ export default class Main {
     try { _platform = (wx.getSystemInfoSync().platform || '').toLowerCase(); } catch(e) {}
     this.isPC = _platform === 'windows' || _platform === 'mac' || _platform === 'devtools';
     this.pcOffsetX = 0;
-    if (this.isPC) {
-      wx.showToast({ title: 'PC模式已启用', icon: 'none', duration: 3000 });
-    }
+    this.pcScale = 1;
     this.buttons = [];
     this.toast = null;
     this.scene = 'home';
@@ -409,26 +407,25 @@ export default class Main {
     this.dpr = info.pixelRatio || 1;
     const realWidth = info.windowWidth || info.screenWidth || 375;
     const realHeight = info.windowHeight || info.screenHeight || 667;
-    // ── PC端适配：限制游戏区域宽度，居中显示 ──
+    // ── PC端适配：计算缩放因子，所有布局元素按此比例缩放 ──
     if (this.isPC) {
-      this.width = Math.min(realWidth, 480);
+      this.width = realWidth;
       this.height = realHeight;
       this.safeTop = 0;
       this.safeBottom = this.height;
-      this.pcOffsetX = Math.floor((realWidth - this.width) / 2);
-      const _si = wx.getSystemInfoSync();
-      wx.showToast({ title: 'W:' + realWidth + ' H:' + realHeight + ' DPR:' + this.dpr, icon: 'none', duration: 5000 });
+      this.pcOffsetX = 0;
+      // 基准宽度375px(iPhone6)，pcScale让布局自动适配任意窗口宽度
+      this.pcScale = Math.min(realWidth, 800) / 375;
     } else {
       this.width = realWidth;
       this.height = realHeight;
       this.safeTop = info.safeArea?.top || 0;
       this.safeBottom = info.safeArea?.bottom || this.height;
       this.pcOffsetX = 0;
+      this.pcScale = 1;
     }
     this.menuButton = wxRuntime?.getMenuButtonBoundingClientRect ? wxRuntime.getMenuButtonBoundingClientRect() : null;
-    // PC端canvas用全宽，以便translate居中绘制
-    const canvasW = this.isPC ? realWidth : this.width;
-    this.canvas.width = Math.floor(canvasW * this.dpr);
+    this.canvas.width = Math.floor(this.width * this.dpr);
     this.canvas.height = Math.floor(this.height * this.dpr);
     if (this.ctx.setTransform) this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     else {
@@ -1333,18 +1330,7 @@ export default class Main {
 
   render() {
     this.buttons = [];
-    // ── PC端适配：全屏清空，游戏区域居中偏移 ──
-    if (this.isPC && this.pcOffsetX) {
-      const fullW = this.width + this.pcOffsetX * 2;
-      this.ctx.clearRect(0, 0, fullW, this.height);
-      this.ctx.fillStyle = '#f0f4f8';
-      this.ctx.fillRect(0, 0, this.pcOffsetX, this.height);
-      this.ctx.fillRect(this.pcOffsetX + this.width, 0, this.pcOffsetX, this.height);
-      this.ctx.save();
-      this.ctx.translate(this.pcOffsetX, 0);
-    } else {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-    }
+    this.ctx.clearRect(0, 0, this.width, this.height);
     if (this.scene === 'home') this.renderHome();
     if (this.scene === 'menu') this.renderMenu();
     if (this.scene === 'game') {
@@ -1352,9 +1338,6 @@ export default class Main {
       this.renderGame();
     }
     this.renderToast();
-    if (this.isPC && this.pcOffsetX) {
-      this.ctx.restore();
-    }
   }
 
   renderLoading() {
@@ -1375,35 +1358,37 @@ export default class Main {
   renderHome() {
     this.drawPageBackground('#f7f9ff', '#e8f1ff', ASSET.image.home);
     const cx = this.width / 2;
-    const heroTop = Math.max(this.safeTop + 43, this.height * 0.06);
-    const logo = Math.min(108, this.width * 0.25);
+    const heroTop = Math.max(this.safeTop + this.s(43), this.height * 0.06);
+    const logo = Math.min(this.s(108), this.width * 0.25);
     const logoY = heroTop;
-    const titleY = logoY + logo + 44;
-    const actionY = titleY + 52;
-    const startRect = { x: cx - 150, y: actionY, w: 300, h: 66 };
+    const titleY = logoY + logo + this.s(44);
+    const actionY = titleY + this.s(52);
+    const startW = Math.min(this.s(300), this.width - this.s(40));
+    const startH = this.s(66);
+    const startRect = { x: cx - startW / 2, y: actionY, w: startW, h: startH };
     this.drawImageContain(ASSET.image.logo, cx - logo / 2, logoY, logo, logo);
-    this.text('\u840c\u5ba0\u51fa\u9003\u8bb0', cx, titleY, 42, '#202633', 'center', 'bold', '#ffffff');
+    this.text('\u840c\u5ba0\u51fa\u9003\u8bb0', cx, titleY, this.s(42), '#202633', 'center', 'bold', '#ffffff');
     if (this.loadingProgress >= 1) {
-      this.button('\u5f00\u59cb\u6e38\u620f', startRect.x, startRect.y, startRect.w, startRect.h, () => this.startGameFromHome(), { fill: '#ffb020', stroke: '#ffffff', text: '#2f230e', fontSize: 28, radius: 10, pressFill: '#f2a30d' });
+      this.button('\u5f00\u59cb\u6e38\u620f', startRect.x, startRect.y, startRect.w, startRect.h, () => this.startGameFromHome(), { fill: '#ffb020', stroke: '#ffffff', text: '#2f230e', fontSize: this.s(28), radius: this.s(10), pressFill: '#f2a30d' });
       this.destroyUserInfoButton();
     } else {
       this.destroyUserInfoButton();
-      const barW = Math.min(300, this.width - 76);
-      const barY = actionY + 25;
-      this.roundRect(cx - barW / 2, barY, barW, 14, 7, '#d4dceb');
-      this.roundRect(cx - barW / 2, barY, Math.max(10, barW * this.loadingProgress), 14, 7, '#ffb020');
-      this.text(`\u8d44\u6e90\u52a0\u8f7d ${Math.floor(this.loadingProgress * 100)}%`, cx, barY + 42, 16, '#556070', 'center', 'bold', '#ffffff');
+      const barW = Math.min(this.s(300), this.width - this.s(76));
+      const barY = actionY + this.s(25);
+      this.roundRect(cx - barW / 2, barY, barW, this.s(14), this.s(7), '#d4dceb');
+      this.roundRect(cx - barW / 2, barY, Math.max(this.s(10), barW * this.loadingProgress), this.s(14), this.s(7), '#ffb020');
+      this.text(`\u8d44\u6e90\u52a0\u8f7d ${Math.floor(this.loadingProgress * 100)}%`, cx, barY + this.s(42), this.s(16), '#556070', 'center', 'bold', '#ffffff');
     }
-    const ageW = Math.min(78, this.width * 0.2);
+    const ageW = Math.min(this.s(78), this.width * 0.2);
     const ageH = ageW * 1.293;
-    const ageX = this.width - ageW - 22;
-    const aiNoteY = this.height - 40;
-    const ageY = aiNoteY - ageH - 56;
-    const healthH = 158;
-    const preferredHealthY = startRect.y + startRect.h + 62;
-    const maxHealthY = ageY - healthH - 26;
+    const ageX = this.width - ageW - this.s(22);
+    const aiNoteY = this.height - this.s(40);
+    const ageY = aiNoteY - ageH - this.s(56);
+    const healthH = this.s(158);
+    const preferredHealthY = startRect.y + startRect.h + this.s(62);
+    const maxHealthY = ageY - healthH - this.s(26);
     const healthY = Math.min(preferredHealthY, maxHealthY);
-    this.text('\u5065\u5eb7\u6e38\u620f\u5fe0\u544a', cx, healthY + 30, 28, '#202633', 'center', 'normal', '#ffffff');
+    this.text('\u5065\u5eb7\u6e38\u620f\u5fe0\u544a', cx, healthY + this.s(30), this.s(28), '#202633', 'center', 'normal', '#ffffff');
     const notices = [
       '\u62b5\u5236\u4e0d\u826f\u6e38\u620f\uff0c\u62d2\u7edd\u76d7\u7248\u6e38\u620f\u3002',
       '\u6ce8\u610f\u81ea\u6211\u4fdd\u62a4\uff0c\u8c28\u9632\u53d7\u9a97\u4e0a\u5f53\u3002',
@@ -1411,9 +1396,9 @@ export default class Main {
       '\u5408\u7406\u5b89\u6392\u65f6\u95f4\uff0c\u4eab\u53d7\u5065\u5eb7\u751f\u6d3b\u3002',
     ];
     notices.forEach((notice, index) => {
-      this.text(notice, cx, healthY + 72 + index * 29, 20, '#607083', 'center', 'normal', '#ffffff');
+      this.text(notice, cx, healthY + this.s(72) + index * this.s(29), this.s(20), '#607083', 'center', 'normal', '#ffffff');
     });
-    this.wrappedText('\u90e8\u5206\u7d20\u6750\u3001\u97f3\u4e50\u4e0e\u8f85\u52a9\u4ee3\u7801\u7531 AI \u5de5\u5177\u534f\u52a9\u751f\u6210\uff0c\u6700\u7ec8\u5185\u5bb9\u5df2\u7531\u5f00\u53d1\u8005\u6574\u7406\u4e0e\u5ba1\u6838\u3002', 22, aiNoteY, Math.max(210, ageX - 42), 12, 17, '#778091', 'left');
+    this.wrappedText('\u90e8\u5206\u7d20\u6750\u3001\u97f3\u4e50\u4e0e\u8f85\u52a9\u4ee3\u7801\u7531 AI \u5de5\u5177\u534f\u52a9\u751f\u6210\uff0c\u6700\u7ec8\u5185\u5bb9\u5df2\u7531\u5f00\u53d1\u8005\u6574\u7406\u4e0e\u5ba1\u6838\u3002', this.s(22), aiNoteY, Math.max(this.s(210), ageX - this.s(42)), this.s(12), this.s(17), '#778091', 'left');
     this.drawImageContain(ASSET.image.ageHint8, ageX, ageY, ageW, ageH);
   }
 
@@ -1431,22 +1416,22 @@ export default class Main {
 
   renderMenu() {
     this.drawPageBackground('#f7f9ff', '#e8f1ff', ASSET.image.home);
-    const top = Math.max(this.safeTop + 10, (this.menuButton?.bottom || 0) + 6);
+    const top = Math.max(this.safeTop + this.s(10), (this.menuButton?.bottom || 0) + this.s(6));
     const title = this.tab === 'levels' ? '\u9009\u62e9\u5173\u5361' : this.tab === 'shop' ? '\u5546\u5e97' : '\u6392\u884c\u699c';
-    this.text(title, this.width / 2, top + 28, 30, '#202633', 'center', 'bold', '#ffffff');
-    const chipW = Math.min(92, Math.max(76, this.width * 0.23));
-    const chipsX = this.width - chipW - 14;
-    this.statChip(chipsX, top + 4, chipW, 27, ASSET.image.coinIcon, this.save.coins);
-    this.statChip(chipsX, top + 35, chipW, 27, ASSET.image.starIcon, this.totalStars());
-    this.renderGameCircleButton(18, top + 8);
-    const tabGap = 2;
-    const tabW = Math.min(112, (this.width - 60) / 3);
+    this.text(title, this.width / 2, top + this.s(28), this.s(30), '#202633', 'center', 'bold', '#ffffff');
+    const chipW = Math.min(this.s(92), Math.max(this.s(76), this.width * 0.23));
+    const chipsX = this.width - chipW - this.s(14);
+    this.statChip(chipsX, top + this.s(4), chipW, this.s(27), ASSET.image.coinIcon, this.save.coins);
+    this.statChip(chipsX, top + this.s(35), chipW, this.s(27), ASSET.image.starIcon, this.totalStars());
+    this.renderGameCircleButton(this.s(18), top + this.s(8));
+    const tabGap = this.s(2);
+    const tabW = Math.min(this.s(112), (this.width - this.s(60)) / 3);
     const tabTotalW = tabW * 3 + tabGap * 2;
     const tabStartX = this.width / 2 - tabTotalW / 2;
     const tabs = [['levels', '\u5173\u5361'], ['shop', '\u5546\u5e97'], ['rank', '\u6392\u884c']];
-    const tabY = top + 98;
+    const tabY = top + this.s(98);
     tabs.forEach(([id, label], i) => {
-      const tabRect = { x: tabStartX + i * (tabW + tabGap), y: tabY, w: tabW, h: 42 };
+      const tabRect = { x: tabStartX + i * (tabW + tabGap), y: tabY, w: tabW, h: this.s(42) };
       this.button(label, tabRect.x, tabRect.y, tabRect.w, tabRect.h, () => {
         if (id === 'rank') {
           this.enterRankTab();
@@ -1460,10 +1445,10 @@ export default class Main {
         fill: this.tab === id ? '#ffb020' : 'rgba(255,255,255,0.88)',
         stroke: this.tab === id ? '#ffffff' : '#d8e1f0',
         text: this.tab === id ? '#2f230e' : '#536173',
-        fontSize: 18,
+        fontSize: this.s(18),
       });
     });
-    const contentTop = top + 150;
+    const contentTop = top + this.s(150);
     if (this.tab === 'levels') this.renderLevelMenu(contentTop);
     if (this.tab === 'shop') this.renderShop(contentTop);
     if (this.tab === 'rank') this.renderRank(contentTop);
@@ -1471,30 +1456,30 @@ export default class Main {
   }
 
   renderGameCircleButton(x, y) {
-    const w = 72;
-    const h = 62;
+    const w = this.s(72);
+    const h = this.s(62);
     const button = { x, y, w, h, action: () => this.openGameCircle() };
     this.buttons.push(button);
     const pressed = this.pressedPoint && this.inRect(this.pressedPoint, button);
-    const drawY = y + (pressed ? 3 : 0);
-    if (!pressed) this.roundRect(x + 1, y + 4, w, h, 18, 'rgba(15,23,42,0.08)');
-    this.roundRect(x, drawY, w, h, 18, 'rgba(255,255,255,0.94)', '#bfe8c4', 1.8);
+    const drawY = y + (pressed ? this.s(3) : 0);
+    if (!pressed) this.roundRect(x + this.s(1), y + this.s(4), w, h, this.s(18), 'rgba(15,23,42,0.08)');
+    this.roundRect(x, drawY, w, h, this.s(18), 'rgba(255,255,255,0.94)', '#bfe8c4', this.s(1.8));
     const cx = x + w / 2;
-    this.drawImageContain(ASSET.image.gameCircleIcon, cx - 22, drawY + 4, 44, 44);
-    this.text('\u6e38\u620f\u5708', cx, drawY + h - 7, 12, '#125c39', 'center', 'bold');
+    this.drawImageContain(ASSET.image.gameCircleIcon, cx - this.s(22), drawY + this.s(4), this.s(44), this.s(44));
+    this.text('\u6e38\u620f\u5708', cx, drawY + h - this.s(7), this.s(12), '#125c39', 'center', 'bold');
   }
 
   renderLevelMenu(y) {
     const panel = this.panelRect(y);
-    this.roundRect(panel.x, panel.y, panel.w, panel.h, 14, 'rgba(255,255,255,0.92)', '#dbe4f1', 2);
+    this.roundRect(panel.x, panel.y, panel.w, panel.h, this.s(14), 'rgba(255,255,255,0.92)', '#dbe4f1', this.s(2));
     const totalPages = Math.max(1, Math.ceil(this.levels.length / 9));
     this.page = clamp(this.page, 0, totalPages - 1);
     const pageGate = this.levelPageGate(this.page);
     const pageUnlocked = pageGate.unlocked;
-    const gridTop = panel.y + 34;
-    const gridBottom = panel.y + panel.h - 112;
-    const tile = Math.min(88, (panel.w - 86) / 3, (gridBottom - gridTop - 34) / 3);
-    const space = Math.min(18, Math.max(12, tile * 0.2));
+    const gridTop = panel.y + this.s(34);
+    const gridBottom = panel.y + panel.h - this.s(112);
+    const tile = Math.min(this.s(88), (panel.w - this.s(86)) / 3, (gridBottom - gridTop - this.s(34)) / 3);
+    const space = Math.min(this.s(18), Math.max(this.s(12), tile * 0.2));
     const gap = tile + space;
     const gridW = tile * 3 + space * 2;
     const gridH = tile * 3 + space * 2;
@@ -1522,32 +1507,32 @@ export default class Main {
     if (!pageUnlocked) {
       this.renderLevelPageLock({ x: startX - space / 2, y: startY - space / 2, w: gridW + space, h: gridH + space }, pageGate);
     }
-    const pagerY = panel.y + panel.h - 88;
+    const pagerY = panel.y + panel.h - this.s(88);
     this.renderLevelPager(panel, pagerY, totalPages);
-    const quickW = Math.min(132, (panel.w - 88) / 2);
-    const quickGap = 22;
-    const quickY = panel.y + panel.h - 48;
-    this.button('\u6700\u65b0', panel.x + panel.w / 2 - quickW - quickGap / 2, quickY, quickW, 36, () => {
+    const quickW = Math.min(this.s(132), (panel.w - this.s(88)) / 2);
+    const quickGap = this.s(22);
+    const quickY = panel.y + panel.h - this.s(48);
+    this.button('\u6700\u65b0', panel.x + panel.w / 2 - quickW - quickGap / 2, quickY, quickW, this.s(36), () => {
       this.page = this.highestUnlockedPageByStars(Math.floor((this.contiguousUnlockedLevel() - 1) / 9));
-    }, { fill: '#fff6df', stroke: '#ffcf77', text: '#6b470b', fontSize: 15, radius: 9 });
-    this.button('\u8865\u661f', panel.x + panel.w / 2 + quickGap / 2, quickY, quickW, 36, () => {
+    }, { fill: '#fff6df', stroke: '#ffcf77', text: '#6b470b', fontSize: this.s(15), radius: this.s(9) });
+    this.button('\u8865\u661f', panel.x + panel.w / 2 + quickGap / 2, quickY, quickW, this.s(36), () => {
       const index = this.levels.findIndex((level) => {
         const progress = this.levelProgress(level.levelId);
         return level.levelId <= this.contiguousUnlockedLevel() && (!progress.passed || progress.stars < 3);
       });
       if (index >= 0) this.page = this.highestUnlockedPageByStars(Math.floor(index / 9));
       else this.showToast('\u5f53\u524d\u6ca1\u6709\u5f85\u8865\u4e09\u661f\u7684\u5173\u5361');
-    }, { fill: '#e9fff5', stroke: '#74d99f', text: '#125c39', fontSize: 15, radius: 9 });
+    }, { fill: '#e9fff5', stroke: '#74d99f', text: '#125c39', fontSize: this.s(15), radius: this.s(9) });
   }
 
   renderLevelPager(panel, y, totalPages) {
     const cx = panel.x + panel.w / 2;
     const atFirst = this.page <= 0;
     const atLast = this.page >= totalPages - 1;
-    const btnSize = 40;
-    const textW = 74;
-    const gap = 16;
-    const rowY = y - btnSize / 2 - 2;
+    const btnSize = this.s(40);
+    const textW = this.s(74);
+    const gap = this.s(16);
+    const rowY = y - btnSize / 2 - this.s(2);
     const leftX = cx - textW / 2 - gap - btnSize;
     const rightX = cx + textW / 2 + gap;
     this.iconButton(leftX, rowY, btnSize, btnSize, 'left', () => {
@@ -1555,8 +1540,8 @@ export default class Main {
       this.page = clamp(this.page - 1, 0, totalPages - 1);
       this.play('click');
     }, { disabled: atFirst });
-    this.roundRect(cx - textW / 2, y - 16, textW, 30, 15, 'rgba(255,255,255,0.72)', '#edf2f8', 1);
-    this.text(`${this.page + 1} / ${totalPages}`, cx, y + 5, 17, '#536173', 'center', 'bold');
+    this.roundRect(cx - textW / 2, y - this.s(16), textW, this.s(30), this.s(15), 'rgba(255,255,255,0.72)', '#edf2f8', 1);
+    this.text(`${this.page + 1} / ${totalPages}`, cx, y + this.s(5), this.s(17), '#536173', 'center', 'bold');
     this.iconButton(rightX, rowY, btnSize, btnSize, 'right', () => {
       if (atLast) return;
       this.page = clamp(this.page + 1, 0, totalPages - 1);
@@ -1568,12 +1553,12 @@ export default class Main {
     const button = { x, y, w, h, action, disabled: options.disabled };
     this.buttons.push(button);
     const pressed = !options.disabled && this.pressedPoint && this.inRect(this.pressedPoint, button);
-    const drawY = y + (pressed ? 2 : 0);
+    const drawY = y + (pressed ? this.s(2) : 0);
     const fill = options.disabled ? '#f3f6fb' : pressed ? '#eef6ff' : '#ffffff';
     const stroke = options.disabled ? '#dfe6f1' : '#d8e1f0';
     const color = options.disabled ? '#b5bfcc' : '#2f80ed';
-    if (!options.disabled && !pressed) this.roundRect(x, y + 3, w, h, w / 2, 'rgba(15,23,42,0.08)');
-    this.roundRect(x, drawY, w, h, w / 2, fill, stroke, 1.8);
+    if (!options.disabled && !pressed) this.roundRect(x, y + this.s(3), w, h, w / 2, 'rgba(15,23,42,0.08)');
+    this.roundRect(x, drawY, w, h, w / 2, fill, stroke, this.s(1.8));
     if (!options.disabled) {
       this.circle(x + w / 2, drawY + h / 2, w * 0.28, pressed ? '#dff0ff' : '#eef6ff');
       this.circle(x + w * 0.37, drawY + h * 0.32, w * 0.055, 'rgba(255,255,255,0.86)');
@@ -1625,15 +1610,15 @@ export default class Main {
     const button = { x, y, w: tile, h: tile, action: options.onTap, disabled: !unlocked };
     this.buttons.push(button);
     const pressed = unlocked && this.pressedPoint && this.inRect(this.pressedPoint, button);
-    const drawY = y + (pressed ? 3 : 0);
+    const drawY = y + (pressed ? this.s(3) : 0);
     const passed = !!progress.passed;
     const baseFill = !unlocked ? '#f5f7fb' : current ? '#f8fbff' : '#ffffff';
     const stroke = !unlocked ? '#d9e1ec' : current ? '#2f80ed' : passed ? '#bfe8c4' : '#d8e1f0';
     const accent = !unlocked ? '#aeb7c4' : current ? '#2f80ed' : passed ? '#55bd4b' : '#ffb020';
     const numberColor = !unlocked ? '#8e98a7' : current ? '#1f6fd1' : '#283241';
-    if (!pressed) this.roundRect(x + 1, y + 5, tile, tile, 11, 'rgba(15,23,42,0.08)');
-    this.roundRect(x, drawY, tile, tile, 11, baseFill, stroke, current ? 2.4 : 1.6);
-    this.roundRect(x + tile * 0.16, drawY + tile * 0.12, tile * 0.68, Math.max(4, tile * 0.055), 5, accent);
+    if (!pressed) this.roundRect(x + this.s(1), y + this.s(5), tile, tile, this.s(11), 'rgba(15,23,42,0.08)');
+    this.roundRect(x, drawY, tile, tile, this.s(11), baseFill, stroke, current ? this.s(2.4) : this.s(1.6));
+    this.roundRect(x + tile * 0.16, drawY + tile * 0.12, tile * 0.68, Math.max(this.s(4), tile * 0.055), this.s(5), accent);
     this.renderLevelStatusBadge(x + tile - tile * 0.16, drawY + tile * 0.17, tile * 0.085, { unlocked, current, passed });
     this.drawCenteredText(String(level.levelId), x + tile / 2, drawY + tile * 0.47, this.levelNumberSize(level.levelId, tile), numberColor, 'bold');
     this.renderStars(x + tile / 2, drawY + tile * 0.82, unlocked && passed ? progress.stars : 0, Math.max(10, tile * 0.14), Math.max(2, tile * 0.032));
@@ -1641,9 +1626,9 @@ export default class Main {
 
   levelNumberSize(levelId, tile) {
     const digits = String(levelId).length;
-    if (digits >= 3) return Math.max(24, tile * 0.34);
-    if (digits === 2) return Math.max(28, tile * 0.39);
-    return Math.max(31, tile * 0.44);
+    if (digits >= 3) return Math.max(this.s(24), tile * 0.34);
+    if (digits === 2) return Math.max(this.s(28), tile * 0.39);
+    return Math.max(this.s(31), tile * 0.44);
   }
 
   renderLevelStatusBadge(cx, cy, r, state) {
@@ -2068,19 +2053,19 @@ export default class Main {
   renderGame() {
     const theme = this.getTheme();
     this.drawPageBackground(theme.colors.pageA, theme.colors.pageB, theme.bg || ASSET.image.game);
-    const top = this.safeTop + 18;
-    this.button('\u8fd4\u56de', 18, top, 70, 38, () => {
+    const top = this.safeTop + this.s(18);
+    this.button('\u8fd4\u56de', this.s(18), top, this.s(70), this.s(38), () => {
       this.scene = 'menu';
       this.tab = 'levels';
       this.jumpToLatestLevelPage();
       this.playMusic('bgm');
       this.play('click');
-    }, { fill: 'rgba(255,255,255,0.90)', stroke: '#d8e1f0', fontSize: 16 });
-    this.text(`\u7b2c ${this.level.levelId} \u5173`, this.width / 2, top + 20, 24, theme.colors.text, 'center', 'bold', '#ffffff');
-    this.text(`\u6b65\u6570 ${this.steps} / ${this.level.stepLimit}`, this.width / 2, top + 50, 16, this.steps >= this.level.stepLimit ? '#ff4d4f' : theme.colors.muted, 'center', 'bold', '#ffffff');
-    this.renderStepLimitBonusEffect(this.width / 2 + 74, top + 50);
-    this.statChip(this.width - 102, top - 2, 86, 27, ASSET.image.coinIcon, this.save.coins);
-    this.statChip(this.width - 102, top + 29, 86, 27, ASSET.image.starIcon, this.totalStars());
+    }, { fill: 'rgba(255,255,255,0.90)', stroke: '#d8e1f0', fontSize: this.s(16) });
+    this.text(`\u7b2c ${this.level.levelId} \u5173`, this.width / 2, top + this.s(20), this.s(24), theme.colors.text, 'center', 'bold', '#ffffff');
+    this.text(`\u6b65\u6570 ${this.steps} / ${this.level.stepLimit}`, this.width / 2, top + this.s(50), this.s(16), this.steps >= this.level.stepLimit ? '#ff4d4f' : theme.colors.muted, 'center', 'bold', '#ffffff');
+    this.renderStepLimitBonusEffect(this.width / 2 + this.s(74), top + this.s(50));
+    this.statChip(this.width - this.s(102), top - this.s(2), this.s(86), this.s(27), ASSET.image.coinIcon, this.save.coins);
+    this.statChip(this.width - this.s(102), top + this.s(29), this.s(86), this.s(27), ASSET.image.starIcon, this.totalStars());
     this.renderBoard(theme);
     this.renderTools(theme);
     this.renderGameBannerReserve();
@@ -2106,16 +2091,16 @@ export default class Main {
   }
 
   renderBoard(theme) {
-    const top = this.safeTop + 82;
-    const bottomTools = Math.max(118, this.height - this.safeBottom + 110) + this.gameBannerReserve();
-    this.boardSize = Math.min(this.width - 46, 572, this.height - top - bottomTools, this.height * 0.46);
-    this.boardSize = Math.max(260, this.boardSize);
+    const top = this.safeTop + this.s(82);
+    const bottomTools = Math.max(this.s(118), this.height - this.safeBottom + this.s(110)) + this.gameBannerReserve();
+    this.boardSize = Math.min(this.width - this.s(46), this.s(572), this.height - top - bottomTools, this.height * 0.46);
+    this.boardSize = Math.max(this.s(260), this.boardSize);
     this.cellSize = this.boardSize / this.level.width;
     this.boardX = (this.width - this.boardSize) / 2;
     this.boardY = top + Math.max(0, (this.height - top - bottomTools - this.boardSize) / 2);
-    const pad = 12;
-    this.roundRect(this.boardX - pad, this.boardY - pad + 7, this.boardSize + pad * 2, this.boardSize + pad * 2, 16, 'rgba(0,0,0,0.11)');
-    this.roundRect(this.boardX - pad / 2, this.boardY - pad / 2, this.boardSize + pad, this.boardSize + pad, 14, theme.colors.board, 'rgba(255,255,255,0.82)', 3);
+    const pad = this.s(12);
+    this.roundRect(this.boardX - pad, this.boardY - pad + this.s(7), this.boardSize + pad * 2, this.boardSize + pad * 2, this.s(16), 'rgba(0,0,0,0.11)');
+    this.roundRect(this.boardX - pad / 2, this.boardY - pad / 2, this.boardSize + pad, this.boardSize + pad, this.s(14), theme.colors.board, 'rgba(255,255,255,0.82)', this.s(3));
     for (let y = 0; y < this.level.height; y += 1) {
       for (let x = 0; x < this.level.width; x += 1) {
         const rect = this.gridRect({ x, y, w: 1, h: 1 }, 4);
@@ -2638,7 +2623,7 @@ export default class Main {
   }
 
   renderTools(theme) {
-    const y = Math.min(this.height - 82 - this.gameBannerReserve(), this.safeBottom - 86 - this.gameBannerReserve());
+    const y = Math.min(this.height - this.s(82) - this.gameBannerReserve(), this.safeBottom - this.s(86) - this.gameBannerReserve());
     const showAds = !this.adsHidden();
     const undoNeedsAd = this.undoLeft <= 0;
     const unlimitedHints = this.hasUnlimitedHints();
@@ -2672,15 +2657,15 @@ export default class Main {
     }
     if (this.addStepsAdEnabled()) items.push([this.addStepsButtonLabel(), () => this.addStepsWithAd(), '#e9fff5', '#74d99f', { adIcon: !this.addStepsUsed && !this.addStepsPending, disabled: this.addStepsUsed || this.addStepsPending }]);
     const count = items.length;
-    const sidePadding = 16;
-    const buttonW = clamp((this.width - sidePadding * 2 - Math.max(0, count - 1) * 8) / count, 60, 76);
+    const sidePadding = this.s(16);
+    const buttonW = clamp((this.width - sidePadding * 2 - Math.max(0, count - 1) * this.s(8)) / count, this.s(60), this.s(76));
     const freeSpace = this.width - sidePadding * 2 - buttonW * count;
-    const itemGap = count > 1 ? clamp(freeSpace / (count - 1), 4, 12) : 0;
+    const itemGap = count > 1 ? clamp(freeSpace / (count - 1), this.s(4), this.s(12)) : 0;
     const totalW = buttonW * count + itemGap * Math.max(0, count - 1);
     const startX = (this.width - totalW) / 2;
     items.forEach((item, index) => {
       const x = startX + (buttonW + itemGap) * index;
-      this.button(item[0], x, y, buttonW, 50, item[1], { fill: item[2], stroke: item[3], fontSize: 15, radius: 10, ...item[4] });
+      this.button(item[0], x, y, buttonW, this.s(50), item[1], { fill: item[2], stroke: item[3], fontSize: this.s(15), radius: this.s(10), ...item[4] });
     });
   }
 
@@ -4438,9 +4423,7 @@ export default class Main {
 
   touchPoint(event) {
     const touch = event.changedTouches?.[0] || event.touches?.[0] || { clientX: 0, clientY: 0 };
-    // ── PC端适配：触摸坐标减去居中偏移 ──
-    const offsetX = this.isPC ? (this.pcOffsetX || 0) : 0;
-    return { x: touch.clientX - offsetX, y: touch.clientY };
+    return { x: touch.clientX, y: touch.clientY };
   }
 
   getMoveRange(block, axis) {
@@ -6050,43 +6033,46 @@ export default class Main {
 
   renderToast() {
     if (!this.toast || Date.now() > this.toast.until) return;
-    const fontSize = 18;
-    const subSize = 14;
+    const fontSize = this.s(18);
+    const subSize = this.s(14);
     this.ctx.font = `bold ${fontSize}px sans-serif`;
-    const mainW = this.ctx.measureText(this.toast.message).width + 40;
+    const mainW = this.ctx.measureText(this.toast.message).width + this.s(40);
     let subW = 0;
     if (this.toast.sub) {
       this.ctx.font = `${subSize}px sans-serif`;
-      subW = this.ctx.measureText(this.toast.sub).width + 40;
+      subW = this.ctx.measureText(this.toast.sub).width + this.s(40);
     }
-    const w = Math.min(this.width - 48, Math.max(mainW, subW));
+    const w = Math.min(this.width - this.s(48), Math.max(mainW, subW));
     const x = (this.width - w) / 2;
-    const h = this.toast.sub ? 62 : 48;
-    let y = this.height - 140 - this.gameBannerReserve();
+    const h = this.toast.sub ? this.s(62) : this.s(48);
+    let y = this.height - this.s(140) - this.gameBannerReserve();
     if (this.scene === 'game' && this.boardY && this.boardSize) {
-      const toolsY = Math.min(this.height - 82 - this.gameBannerReserve(), this.safeBottom - 86 - this.gameBannerReserve());
-      const boardBottom = this.boardY + this.boardSize + 18;
-      const toolsTop = toolsY - 8;
+      const toolsY = Math.min(this.height - this.s(82) - this.gameBannerReserve(), this.safeBottom - this.s(86) - this.gameBannerReserve());
+      const boardBottom = this.boardY + this.boardSize + this.s(18);
+      const toolsTop = toolsY - this.s(8);
       if (toolsTop > boardBottom) {
         y = boardBottom + (toolsTop - boardBottom - h) / 2;
       }
     }
-    this.roundRect(x, y, w, h, 24, 'rgba(15,23,42,0.82)');
-    this.text(this.toast.message, this.width / 2, y + (this.toast.sub ? 26 : 31), fontSize, '#ffffff', 'center', 'bold');
+    this.roundRect(x, y, w, h, this.s(24), 'rgba(15,23,42,0.82)');
+    this.text(this.toast.message, this.width / 2, y + (this.toast.sub ? this.s(26) : this.s(31)), fontSize, '#ffffff', 'center', 'bold');
     if (this.toast.sub) {
-      this.text(this.toast.sub, this.width / 2, y + 48, subSize, 'rgba(255,255,255,0.7)', 'center', 'normal');
+      this.text(this.toast.sub, this.width / 2, y + this.s(48), subSize, 'rgba(255,255,255,0.7)', 'center', 'normal');
     }
   }
 
+  // ── PC端缩放辅助：手机端返回原值，PC端按pcScale缩放 ──
+  s(v) { return this.isPC ? Math.round(v * this.pcScale) : v; }
+
   panelRect(y) {
-    const w = Math.min(this.width - 34, 660);
+    const w = Math.min(this.width - this.s(34), this.s(660));
     const bottomReserve = this.scene === 'menu' ? GAME_BANNER_RESERVED_HEIGHT : 0;
-    const h = Math.min(this.height - y - Math.max(22, this.height - this.safeBottom + 18) - bottomReserve, 760);
-    return { x: (this.width - w) / 2, y, w, h: Math.max(320, h) };
+    const h = Math.min(this.height - y - Math.max(this.s(22), this.height - this.safeBottom + this.s(18)) - bottomReserve, this.s(760));
+    return { x: (this.width - w) / 2, y, w, h: Math.max(this.s(320), h) };
   }
 
   modalRect(h) {
-    const w = Math.min(520, this.width - 54);
+    const w = Math.min(this.s(520), this.width - this.s(54));
     return { x: (this.width - w) / 2, y: (this.height - h) / 2, w, h };
   }
 
@@ -6133,14 +6119,14 @@ export default class Main {
   }
 
   statChip(x, y, w, h, icon, value, color) {
-    this.roundRect(x, y, w, h, h / 2, 'rgba(255,255,255,0.88)', '#d8e1f0', 1.5);
+    this.roundRect(x, y, w, h, h / 2, 'rgba(255,255,255,0.88)', '#d8e1f0', this.s(1.5));
     if (this.images.get(icon)) {
-      this.drawImageContain(icon, x + 3, y - 1, h + 2, h + 2);
+      this.drawImageContain(icon, x + this.s(3), y - this.s(1), h + this.s(2), h + this.s(2));
     } else {
-      this.circle(x + h / 2, y + h / 2, h * 0.34, color || '#ffb020', '#ffffff', 1.5);
+      this.circle(x + h / 2, y + h / 2, h * 0.34, color || '#ffb020', '#ffffff', this.s(1.5));
       this.text(icon?.includes?.('/') ? '?' : icon, x + h / 2, y + h / 2 + h * 0.18, h * 0.42, '#ffffff', 'center', 'bold');
     }
-    this.text(String(value), x + h + 8, y + h / 2 + h * 0.18, h * 0.45, '#202633', 'left', 'bold');
+    this.text(String(value), x + h + this.s(8), y + h / 2 + h * 0.18, h * 0.45, '#202633', 'left', 'bold');
   }
 
   drawPageBackground(a, b, imagePath) {
