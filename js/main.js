@@ -320,10 +320,8 @@ export default class Main {
     if (this.isPC) {
       try {
         const si = wx.getSystemInfoSync();
-        // PC端用更紧凑的布局：基准375，但窄屏(<=400)额外缩0.85
         const narrowScale = si.windowWidth <= 400 ? 0.85 : 1;
         this.pcScale = Math.min(si.windowWidth, 800) / 375 * narrowScale;
-        wx.showToast({ title: 'scale:' + this.pcScale.toFixed(2), icon: 'none', duration: 3000 });
       } catch(e) {}
     }
     this.buttons = [];
@@ -5729,7 +5727,7 @@ export default class Main {
   }
 
   dirText(dir) {
-    return dir === 'L' ? '\u5de6' : dir === 'R' ? '\u53f3' : dir === 'U' ? '\u4e0a' : '\u4e0b';
+    return dir === 'L' ? '\u5de6\u2190' : dir === 'R' ? '\u53f3\u2192' : dir === 'U' ? '\u4e0a\u2191' : '\u4e0b\u2193';
   }
 
   // \u2500\u2500 BFS\u6c42\u89e3\u5668\uff1a\u5355\u6b65\u5c55\u5f00\u4fdd\u8bc1\u6700\u4f18\uff0c\u56de\u6eaf\u5408\u5e76\u5f97\u5230\u5408\u9002\u7684\u79fb\u52a8\u8ddd\u79bb \u2500\u2500
